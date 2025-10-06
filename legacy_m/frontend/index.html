@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGACY M - Исламский ИИ-Наставник</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #2c1810 0%, #3d2817 25%, #4a2c1a 50%, #5d3a1f 75%, #6b4224 100%);
+            color: #f4e4bc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #d4af37;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .header p {
+            text-align: center;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .user-panel {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-id {
+            background: rgba(212, 175, 55, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .new-user-btn {
+            background: rgba(212, 175, 55, 0.8);
+            color: #2c1810;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .new-user-btn:hover {
+            background: rgba(212, 175, 55, 1);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .agents-panel {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .agent-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .agent-card:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .agent-card.active {
+            border-color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .agent-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-agent-icon {
+            font-size: 1.5rem;
+        }
+
+        .chat-agent-info h3 {
+            color: #d4af37;
+            font-size: 1.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .chat-agent-info p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: rgba(212, 175, 55, 0.2);
+            margin-left: auto;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+        }
+
+        .message.ai {
+            background: rgba(139, 69, 19, 0.3);
+            margin-right: auto;
+            border: 1px solid rgba(139, 69, 19, 0.4);
+        }
+
+        .message-header {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #d4af37;
+        }
+
+        .message-content {
+            line-height: 1.6;
+        }
+
+        .sources {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .sources h4 {
+            color: #d4af37;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .source-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .source-item:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .source-type {
+            font-size: 0.8rem;
+            color: #d4af37;
+            font-weight: 600;
+        }
+
+        .source-text {
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+            opacity: 0.9;
+        }
+
+        .chat-input-container {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            color: #f4e4bc;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 50px;
+            max-height: 120px;
+            font-family: inherit;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(244, 228, 188, 0.5);
+        }
+
+        .send-btn {
+            background: rgba(212, 175, 55, 0.8);
+            color: #2c1810;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: rgba(212, 175, 55, 1);
+            transform: translateY(-2px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #d4af37;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2c1810 0%, #3d2817 100%);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .modal-title {
+            color: #d4af37;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #d4af37;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .modal-body {
+            line-height: 1.6;
+        }
+
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .user-id-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            color: #f4e4bc;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+
+        .user-id-input:focus {
+            outline: none;
+            border-color: #d4af37;
+        }
+
+        .user-id-input::placeholder {
+            color: rgba(244, 228, 188, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            background: rgba(212, 175, 55, 0.8);
+            color: #2c1810;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: rgba(212, 175, 55, 1);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(139, 69, 19, 0.8);
+            color: #f4e4bc;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 69, 19, 1);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .agents-panel {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .agent-card {
+                min-width: 200px;
+            }
+
+            .user-panel {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>LEGACY M</h1>
+        <p>Цифровая платформа духовного наставничества</p>
+    </div>
+
+    <div class="user-panel" id="userPanel" style="display: none;">
+        <div class="user-info">
+            <span>Пользователь:</span>
+            <div class="user-id" id="userDisplayId"></div>
+        </div>
+        <button class="new-user-btn" onclick="showUserModal()">Новый пользователь</button>
+    </div>
+
+    <div class="main-container">
+        <div class="agents-panel">
+            <div class="agent-card" data-confession="sunni" onclick="selectAgent('sunni')">
+                <div class="agent-icon">🕌</div>
+                <div class="agent-name">Суннитский наставник</div>
+                <div class="agent-description">Исламский наставник, следующий суннитской традиции</div>
+            </div>
+            <div class="agent-card" data-confession="shia" onclick="selectAgent('shia')">
+                <div class="agent-icon">🕋</div>
+                <div class="agent-name">Шиитский наставник</div>
+                <div class="agent-description">Исламский наставник, следующий шиитской традиции</div>
+            </div>
+            <div class="agent-card" data-confession="orthodox" onclick="selectAgent('orthodox')">
+                <div class="agent-icon">⛪</div>
+                <div class="agent-name">Православный наставник</div>
+                <div class="agent-description">Христианский наставник православной традиции</div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon">🤝</div>
+                <div class="welcome-title">Добро пожаловать в LEGACY M</div>
+                <div class="welcome-text">
+                    Выберите наставника слева, чтобы начать духовную беседу. 
+                    Каждый наставник имеет свою уникальную историю общения с вами.
+                </div>
+            </div>
+
+            <div class="chat-header" id="chatHeader" style="display: none;">
+                <div class="chat-agent-icon" id="chatAgentIcon"></div>
+                <div class="chat-agent-info">
+                    <h3 id="chatAgentName"></h3>
+                    <p id="chatAgentDescription"></p>
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages" style="display: none;"></div>
+
+            <div class="loading" id="loading">
+                <div>Наставник размышляет...</div>
+            </div>
+
+            <div class="chat-input-container" id="chatInputContainer" style="display: none;">
+                <div class="chat-input-wrapper">
+                    <textarea 
+                        class="chat-input" 
+                        id="chatInput" 
+                        placeholder="Задайте вопрос наставнику..."
+                        rows="1"
+                    ></textarea>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для работы с пользователями -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Управление пользователем</div>
+                <button class="close-btn" onclick="hideUserModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="userModalContent">
+                    <p>Введите ваш ID пользователя или создайте новый:</p>
+                    <input 
+                        type="text" 
+                        class="user-id-input" 
+                        id="userIdInput" 
+                        placeholder="Введите ID пользователя..."
+                    >
+                    <div class="btn-group">
+                        <button class="btn" onclick="createNewUser()">Создать новый</button>
+                        <button class="btn btn-secondary" onclick="useExistingUser()">Использовать существующий</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для отображения источников -->
+    <div class="modal" id="sourceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="sourceModalTitle">Источник</div>
+                <button class="close-btn" onclick="hideSourceModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="sourceModalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Глобальные переменные
+        let currentUserId = null;
+        let currentConfession = null;
+        let currentSessionId = null;
+
+        // Конфигурация агентов
+        const agents = {
+            sunni: {
+                icon: '🕌',
+                name: 'Суннитский наставник',
+                description: 'Исламский наставник, следующий суннитской традиции'
+            },
+            shia: {
+                icon: '🕋',
+                name: 'Шиитский наставник',
+                description: 'Исламский наставник, следующий шиитской традиции'
+            },
+            orthodox: {
+                icon: '⛪',
+                name: 'Православный наставник',
+                description: 'Христианский наставник православной традиции'
+            }
+        };
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем, есть ли сохраненный ID пользователя
+            const savedUserId = localStorage.getItem('legacy_user_id');
+            if (savedUserId) {
+                loadUser(savedUserId);
+            } else {
+                showUserModal();
+            }
+
+            // Настройка обработчиков событий
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Обработчик для Enter в поле ввода
+            document.getElementById('chatInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Автоматическое изменение размера textarea
+            document.getElementById('chatInput').addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        }
+
+        async function loadUser(userId) {
+            try {
+                const response = await fetch('/api/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUserId = data.user_id;
+                    displayUserInfo();
+                    hideUserModal();
+                } else {
+                    // Пользователь не найден, показываем модальное окно
+                    showUserModal();
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки пользователя:', error);
+                showUserModal();
+            }
+        }
+
+        async function createNewUser() {
+            try {
+                const response = await fetch('/api/user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUserId = data.user_id;
+                    localStorage.setItem('legacy_user_id', currentUserId);
+                    displayUserInfo();
+                    hideUserModal();
+                } else {
+                    alert('Ошибка создания пользователя');
+                }
+            } catch (error) {
+                console.error('Ошибка создания пользователя:', error);
+                alert('Ошибка создания пользователя');
+            }
+        }
+
+        async function useExistingUser() {
+            const userId = document.getElementById('userIdInput').value.trim();
+            if (!userId) {
+                alert('Введите ID пользователя');
+                return;
+            }
+
+            await loadUser(userId);
+        }
+
+        function displayUserInfo() {
+            document.getElementById('userDisplayId').textContent = currentUserId;
+            document.getElementById('userPanel').style.display = 'block';
+        }
+
+        function showUserModal() {
+            document.getElementById('userModal').classList.add('show');
+            document.getElementById('userIdInput').value = '';
+        }
+
+        function hideUserModal() {
+            document.getElementById('userModal').classList.remove('show');
+        }
+
+        function selectAgent(confession) {
+            if (!currentUserId) {
+                showUserModal();
+                return;
+            }
+
+            currentConfession = confession;
+            
+            // Обновляем активную карточку агента
+            document.querySelectorAll('.agent-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelector(`[data-confession="${confession}"]`).classList.add('active');
+
+            // Обновляем заголовок чата
+            const agent = agents[confession];
+            document.getElementById('chatAgentIcon').textContent = agent.icon;
+            document.getElementById('chatAgentName').textContent = agent.name;
+            document.getElementById('chatAgentDescription').textContent = agent.description;
+
+            // Показываем интерфейс чата
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('chatHeader').style.display = 'flex';
+            document.getElementById('chatMessages').style.display = 'block';
+            document.getElementById('chatInputContainer').style.display = 'block';
+
+            // Загружаем историю чата
+            loadChatHistory();
+        }
+
+        async function loadChatHistory() {
+            if (!currentUserId || !currentConfession) return;
+
+            try {
+                const response = await fetch(`/api/user/${currentUserId}/chat/${currentConfession}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    displayMessages(data.messages);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки истории чата:', error);
+            }
+        }
+
+        function displayMessages(messages) {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML = '';
+
+            messages.forEach(message => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.type}`;
+                
+                const header = document.createElement('div');
+                header.className = 'message-header';
+                header.textContent = message.type === 'user' ? 'Вы' : 'Наставник';
+                
+                const content = document.createElement('div');
+                content.className = 'message-content';
+                content.textContent = message.content;
+                
+                messageDiv.appendChild(header);
+                messageDiv.appendChild(content);
+
+                // Добавляем источники, если есть
+                if (message.sources && message.sources.length > 0) {
+                    const sourcesDiv = document.createElement('div');
+                    sourcesDiv.className = 'sources';
+                    
+                    const sourcesTitle = document.createElement('h4');
+                    sourcesTitle.textContent = 'Источники:';
+                    sourcesDiv.appendChild(sourcesTitle);
+
+                    message.sources.forEach(source => {
+                        const sourceDiv = document.createElement('div');
+                        sourceDiv.className = 'source-item';
+                        sourceDiv.onclick = () => showSourceModal(source);
+                        
+                        const typeDiv = document.createElement('div');
+                        typeDiv.className = 'source-type';
+                        typeDiv.textContent = getSourceTypeName(source.type);
+                        
+                        const textDiv = document.createElement('div');
+                        textDiv.className = 'source-text';
+                        textDiv.textContent = getSourcePreview(source);
+                        
+                        sourceDiv.appendChild(typeDiv);
+                        sourceDiv.appendChild(textDiv);
+                        sourcesDiv.appendChild(sourceDiv);
+                    });
+
+                    messageDiv.appendChild(sourcesDiv);
+                }
+
+                chatMessages.appendChild(messageDiv);
+            });
+
+            // Прокручиваем вниз
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getSourceTypeName(type) {
+            const typeNames = {
+                'quran': 'Коран',
+                'hadith': 'Хадис',
+                'orthodox': 'Православный источник'
+            };
+            return typeNames[type] || type;
+        }
+
+        function getSourcePreview(source) {
+            if (source.type === 'quran') {
+                return `Сура ${source.content.surah_number}, аят ${source.content.verse_number}`;
+            } else if (source.type === 'hadith') {
+                return `${source.content.collection}, хадис ${source.content.hadith_number}`;
+            } else if (source.type === 'orthodox') {
+                return `${source.content.book_name}`;
+            }
+            return 'Источник';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message || !currentUserId || !currentConfession) return;
+
+            // Добавляем сообщение пользователя в чат
+            addMessageToChat('user', message);
+            input.value = '';
+            input.style.height = 'auto';
+
+            // Показываем индикатор загрузки
+            showLoading();
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        user_id: currentUserId,
+                        confession: currentConfession
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    currentSessionId = data.session_id;
+                    
+                    // Добавляем ответ ИИ в чат
+                    addMessageToChat('ai', data.response, data.sources);
+                } else {
+                    addMessageToChat('ai', 'Извините, произошла ошибка. Попробуйте еще раз.');
+                }
+            } catch (error) {
+                console.error('Ошибка отправки сообщения:', error);
+                addMessageToChat('ai', 'Извините, произошла ошибка. Попробуйте еще раз.');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function addMessageToChat(type, content, sources = null) {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const header = document.createElement('div');
+            header.className = 'message-header';
+            header.textContent = type === 'user' ? 'Вы' : 'Наставник';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = content;
+            
+            messageDiv.appendChild(header);
+            messageDiv.appendChild(contentDiv);
+
+            // Добавляем источники, если есть
+            if (sources && sources.length > 0) {
+                const sourcesDiv = document.createElement('div');
+                sourcesDiv.className = 'sources';
+                
+                const sourcesTitle = document.createElement('h4');
+                sourcesTitle.textContent = 'Источники:';
+                sourcesDiv.appendChild(sourcesTitle);
+
+                sources.forEach(source => {
+                    const sourceDiv = document.createElement('div');
+                    sourceDiv.className = 'source-item';
+                    sourceDiv.onclick = () => showSourceModal(source);
+                    
+                    const typeDiv = document.createElement('div');
+                    typeDiv.className = 'source-type';
+                    typeDiv.textContent = getSourceTypeName(source.type);
+                    
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'source-text';
+                    textDiv.textContent = getSourcePreview(source);
+                    
+                    sourceDiv.appendChild(typeDiv);
+                    sourceDiv.appendChild(textDiv);
+                    sourcesDiv.appendChild(sourceDiv);
+                });
+
+                messageDiv.appendChild(sourcesDiv);
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showLoading() {
+            document.getElementById('loading').classList.add('show');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('show');
+        }
+
+        function showSourceModal(source) {
+            const modal = document.getElementById('sourceModal');
+            const title = document.getElementById('sourceModalTitle');
+            const body = document.getElementById('sourceModalBody');
+
+            title.textContent = getSourceTypeName(source.type);
+            
+            let content = '';
+            if (source.type === 'quran') {
+                content = `
+                    <h4>Сура ${source.content.surah_number}, аят ${source.content.verse_number}</h4>
+                    <div style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                        <div style="font-family: 'Noto Sans Arabic', sans-serif; font-size: 1.2rem; text-align: right; margin-bottom: 1rem;">
+                            ${source.content.arabic_text || ''}
+                        </div>
+                        <div style="line-height: 1.6;">
+                            ${source.content.translation_ru || ''}
+                        </div>
+                    </div>
+                `;
+            } else if (source.type === 'hadith') {
+                content = `
+                    <h4>${source.content.collection}, хадис ${source.content.hadith_number}</h4>
+                    <div style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                        <div style="font-family: 'Noto Sans Arabic', sans-serif; font-size: 1.2rem; text-align: right; margin-bottom: 1rem;">
+                            ${source.content.arabic_text || ''}
+                        </div>
+                        <div style="line-height: 1.6;">
+                            ${source.content.translation_ru || ''}
+                        </div>
+                        ${source.content.narrator ? `<p><strong>Передатчик:</strong> ${source.content.narrator}</p>` : ''}
+                        ${source.content.grade ? `<p><strong>Достоверность:</strong> ${source.content.grade}</p>` : ''}
+                    </div>
+                `;
+            } else if (source.type === 'orthodox') {
+                content = `
+                    <h4>${source.content.book_name}</h4>
+                    <div style="margin: 1rem 0; padding: 1rem; background: rgba(0,0,0,0.2); border-radius: 10px;">
+                        <div style="line-height: 1.6;">
+                            ${source.content.translation_ru || ''}
+                        </div>
+                        ${source.content.author ? `<p><strong>Автор:</strong> ${source.content.author}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            body.innerHTML = content;
+            modal.classList.add('show');
+        }
+
+        function hideSourceModal() {
+            document.getElementById('sourceModal').classList.remove('show');
+        }
+
+        // Закрытие модальных окон по клику вне их
+        window.onclick = function(event) {
+            const userModal = document.getElementById('userModal');
+            const sourceModal = document.getElementById('sourceModal');
+            
+            if (event.target === userModal) {
+                hideUserModal();
+            }
+            if (event.target === sourceModal) {
+                hideSourceModal();
+            }
+        }
+    </script>
+</body>
+</html>

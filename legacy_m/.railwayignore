@@ -1,0 +1,14 @@
+# Игнорируем ненужные файлы для Railway
+.git
+.venv
+__pycache__
+*.pyc
+*.sqlite
+*.db
+.env
+config.env
+legacy_m.db
+temp_audio/
+outputs/
+*.log
+.DS_Store

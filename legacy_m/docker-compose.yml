@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # База данных PostgreSQL
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: legacy_m
+      POSTGRES_USER: legacy_user
+      POSTGRES_PASSWORD: legacy_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U legacy_user -d legacy_m"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend приложение
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://legacy_user:legacy_password@db:5432/legacy_m
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ENVIRONMENT=production
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

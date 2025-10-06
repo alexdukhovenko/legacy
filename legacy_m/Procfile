@@ -1,0 +1,1 @@
+web: python init_production.py && python backend/main.py
