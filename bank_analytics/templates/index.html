@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализ банковских выписок</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            background-color: #e9ecef;
+            border-color: #0056b3;
+        }
+        .upload-area.dragover {
+            background-color: #d1ecf1;
+            border-color: #17a2b8;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-card.income {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        .stat-card.expense {
+            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+        }
+        .stat-card.balance {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .transaction-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .category-badge {
+            font-size: 0.8em;
+            padding: 4px 8px;
+        }
+        .loading {
+            display: none;
+        }
+        .loading.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>
+                Анализ банковских выписок
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Загрузка файлов -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-upload me-2"></i>Загрузка банковских выписок</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                            <h5>Перетащите файлы сюда или нажмите для выбора</h5>
+                            <p class="text-muted">Поддерживаемые форматы: CSV, Excel (.xlsx, .xls), TXT</p>
+                            <input type="file" id="fileInput" multiple accept=".csv,.xlsx,.xls,.txt" style="display: none;">
+                        </div>
+                        <div class="loading text-center mt-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Загрузка...</span>
+                            </div>
+                            <p class="mt-2">Обработка файлов...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Сводка -->
+        <div class="row mb-4" id="summarySection" style="display: none;">
+            <div class="col-md-4">
+                <div class="stat-card income">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Доходы</h6>
+                            <h3 id="totalIncome">0 ₽</h3>
+                        </div>
+                        <i class="fas fa-arrow-up fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card expense">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Расходы</h6>
+                            <h3 id="totalExpense">0 ₽</h3>
+                        </div>
+                        <i class="fas fa-arrow-down fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card balance">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">Баланс</h6>
+                            <h3 id="totalBalance">0 ₽</h3>
+                        </div>
+                        <i class="fas fa-balance-scale fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Графики -->
+        <div class="row mb-4" id="chartsSection" style="display: none;">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-pie me-2"></i>Расходы по категориям</h5>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5><i class="fas fa-chart-line me-2"></i>Месячный баланс</h5>
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Транзакции -->
+        <div class="row mb-4" id="transactionsSection" style="display: none;">
+            <div class="col-12">
+                <div class="transaction-table">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="fas fa-list me-2"></i>Транзакции</h5>
+                        <div>
+                            <button class="btn btn-success btn-sm me-2" onclick="exportExcel()">
+                                <i class="fas fa-file-excel me-1"></i>Excel
+                            </button>
+                            <button class="btn btn-info btn-sm" onclick="exportCSV()">
+                                <i class="fas fa-file-csv me-1"></i>CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Описание</th>
+                                    <th>Сумма</th>
+                                    <th>Категория</th>
+                                    <th>Банк</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTable">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0" id="pagination">
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
