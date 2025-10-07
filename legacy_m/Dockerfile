@@ -24,11 +24,8 @@ RUN mkdir -p /app/logs
 # Открываем порт
 EXPOSE 8000
 
-# Скопируем скрипт инициализации
-COPY init_production.py .
-
 # Команда для запуска с инициализацией
-CMD ["sh", "-c", "python init_production.py && python backend/main.py"]
+CMD ["python", "start_simple.py"]
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
