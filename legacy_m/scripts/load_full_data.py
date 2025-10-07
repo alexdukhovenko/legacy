@@ -49,34 +49,11 @@ class FullDataLoader:
         logger.warning("⚠️ PDF файлы требуют парсинга, используем примерные данные")
         self._load_sample_quran()
         
-        # Парсим арабский текст
-        arabic_verses = self._parse_quran_file(quran_arabic_file, "arabic")
-        # Парсим русский перевод
-        russian_verses = self._parse_quran_file(quran_russian_file, "russian")
+        # TODO: Добавить парсинг PDF файлов в будущем
+        # Пока используем только примерные данные
         
-        # Объединяем данные
-        for surah_num in arabic_verses:
-            for verse_num in arabic_verses[surah_num]:
-                if surah_num in russian_verses and verse_num in russian_verses[surah_num]:
-                    verse_data = {
-                        'surah_number': surah_num,
-                        'verse_number': verse_num,
-                        'arabic_text': arabic_verses[surah_num][verse_num],
-                        'translation_ru': russian_verses[surah_num][verse_num],
-                        'confession': None
-                    }
-                    
-                    # Проверяем, не существует ли уже
-                    existing = self.db.query(QuranVerse).filter(
-                        QuranVerse.surah_number == surah_num,
-                        QuranVerse.verse_number == verse_num
-                    ).first()
-                    
-                    if not existing:
-                        quran_verse = QuranVerse(**verse_data)
-                        self.db.add(quran_verse)
+        # Примерные данные уже загружены в _load_sample_quran()
         
-        self.db.commit()
         logger.info("✅ Коран загружен из файлов")
     
     def _parse_quran_file(self, file_path, text_type):
