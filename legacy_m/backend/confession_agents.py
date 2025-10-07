@@ -14,6 +14,7 @@ from sqlalchemy import or_, and_
 from database.models import QuranVerse, Hadith, Commentary, OrthodoxText, OrthodoxDocument
 from .ai_providers import ai_manager
 from .simple_fallback import simple_fallback
+from .enhanced_ai_agent import EnhancedAIAgent
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
