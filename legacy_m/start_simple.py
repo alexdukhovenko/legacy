@@ -22,23 +22,11 @@ def main():
         init_database()
         print("✅ Database initialized")
         
-        # Загрузка данных Корана
-        print("📚 Loading Quran data...")
-        from scripts.load_quran_data import main as load_quran
-        load_quran()
-        print("✅ Quran data loaded")
-        
-        # Загрузка православных данных
-        print("📚 Loading Orthodox data...")
-        from scripts.load_sample_orthodox import load_sample_orthodox_data
-        load_sample_orthodox_data()
-        print("✅ Orthodox data loaded")
-        
-        # Загрузка исламских данных
-        print("📚 Loading Islamic data...")
-        from scripts.load_sample_islamic import load_sample_islamic_data
-        load_sample_islamic_data()
-        print("✅ Islamic data loaded")
+        # Загрузка всех данных из файлов
+        print("📚 Loading all data from files...")
+        from scripts.load_full_data import main as load_full_data
+        load_full_data()
+        print("✅ All data loaded from files")
         
         print("✅ Initialization completed successfully!")
         
