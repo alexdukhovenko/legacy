@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 from database.models import QuranVerse, Hadith, Commentary, OrthodoxText, OrthodoxDocument
 from .ai_providers import ai_manager
+from .simple_fallback import simple_fallback
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -257,7 +258,15 @@ class SunniAgent(BaseConfessionAgent):
                 {"role": "user", "content": user_prompt}
             ]
             
-            response_text = ai_manager.generate_response(messages, max_tokens=800)
+            try:
+                response_text = ai_manager.generate_response(messages, max_tokens=800)
+                logger.info(f"✅ Ответ от AI провайдера получен")
+            except Exception as e:
+                logger.error(f"❌ Ошибка AI провайдера: {e}")
+                logger.info(f"🔄 Используем простой fallback")
+                # Используем простой fallback
+                fallback_result = simple_fallback.generate_response(question, self.confession_name, relevant_texts)
+                return fallback_result
             
             # Постобработка
             if "Интерпретация:" in response_text:
@@ -481,7 +490,15 @@ class ShiaAgent(BaseConfessionAgent):
                 {"role": "user", "content": user_prompt}
             ]
             
-            response_text = ai_manager.generate_response(messages, max_tokens=800)
+            try:
+                response_text = ai_manager.generate_response(messages, max_tokens=800)
+                logger.info(f"✅ Ответ от AI провайдера получен")
+            except Exception as e:
+                logger.error(f"❌ Ошибка AI провайдера: {e}")
+                logger.info(f"🔄 Используем простой fallback")
+                # Используем простой fallback
+                fallback_result = simple_fallback.generate_response(question, self.confession_name, relevant_texts)
+                return fallback_result
             
             # Постобработка
             if "Интерпретация:" in response_text:
@@ -721,7 +738,15 @@ class OrthodoxAgent(BaseConfessionAgent):
                 {"role": "user", "content": user_prompt}
             ]
             
-            response_text = ai_manager.generate_response(messages, max_tokens=800)
+            try:
+                response_text = ai_manager.generate_response(messages, max_tokens=800)
+                logger.info(f"✅ Ответ от AI провайдера получен")
+            except Exception as e:
+                logger.error(f"❌ Ошибка AI провайдера: {e}")
+                logger.info(f"🔄 Используем простой fallback")
+                # Используем простой fallback
+                fallback_result = simple_fallback.generate_response(question, self.confession_name, relevant_texts)
+                return fallback_result
             
             # Постобработка
             if "Интерпретация:" in response_text:
