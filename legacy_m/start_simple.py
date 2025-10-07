@@ -28,6 +28,12 @@ def main():
         load_quran()
         print("✅ Quran data loaded")
         
+        # Загрузка православных данных
+        print("📚 Loading Orthodox data...")
+        from scripts.load_sample_orthodox import load_sample_orthodox_data
+        load_sample_orthodox_data()
+        print("✅ Orthodox data loaded")
+        
         print("✅ Initialization completed successfully!")
         
     except Exception as e:
