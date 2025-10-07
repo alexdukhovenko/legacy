@@ -607,8 +607,8 @@ class ShiaAgent(BaseConfessionAgent):
 class OrthodoxAgent(BaseConfessionAgent):
     """AI агент для православия"""
     
-    def __init__(self, db: Session):
-        super().__init__(db)
+    def __init__(self, confession: str, db: Session):
+        super().__init__(confession, db)
         self.confession_name = "orthodox"
     
     def _get_system_prompt(self) -> str:
@@ -894,6 +894,6 @@ class ConfessionAgentFactory:
         elif confession == 'shia':
             return ShiaAgent(confession, db)
         elif confession == 'orthodox':
-            return OrthodoxAgent(db)
+            return OrthodoxAgent(confession, db)
         else:
             raise ValueError(f"Неподдерживаемая конфессия: {confession}")
