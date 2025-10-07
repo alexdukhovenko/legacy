@@ -7,6 +7,8 @@ config.production.env
 *.db
 *.sqlite
 legacy_m.db
+legacy_m/legacy_m.db
+legacy_m/*.db
 
 # Python
 __pycache__/
