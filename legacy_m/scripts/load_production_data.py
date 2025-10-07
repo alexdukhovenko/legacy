@@ -165,7 +165,6 @@ class ProductionDataLoader:
             # Суннитские хадисы
             Hadith(
                 collection="Бухари",
-                chapter="Начало Откровения",
                 number=1,
                 text_arabic="إنما الأعمال بالنيات",
                 text_russian="Поистине, дела (оцениваются) только по намерениям.",
@@ -174,7 +173,6 @@ class ProductionDataLoader:
             ),
             Hadith(
                 collection="Бухари",
-                chapter="Вера",
                 number=2,
                 text_arabic="بني الإسلام على خمس",
                 text_russian="Ислам построен на пяти (столпах).",
@@ -183,7 +181,6 @@ class ProductionDataLoader:
             ),
             Hadith(
                 collection="Муслим",
-                chapter="Вера",
                 number=1,
                 text_arabic="الإيمان بضع وسبعون شعبة",
                 text_russian="Вера имеет более семидесяти ответвлений.",
@@ -192,8 +189,7 @@ class ProductionDataLoader:
             ),
             Hadith(
                 collection="Бухари",
-                chapter="Молитва",
-                number=1,
+                number=3,
                 text_arabic="الصلاة عمود الدين",
                 text_russian="Молитва - столп религии.",
                 commentary="Важность молитвы в исламе.",
@@ -201,8 +197,7 @@ class ProductionDataLoader:
             ),
             Hadith(
                 collection="Муслим",
-                chapter="Семья",
-                number=1,
+                number=2,
                 text_arabic="خيركم خيركم لأهله",
                 text_russian="Лучший из вас - тот, кто лучше всех относится к своей семье.",
                 commentary="Важность хорошего отношения к семье.",
@@ -212,7 +207,6 @@ class ProductionDataLoader:
             # Шиитские хадисы
             Hadith(
                 collection="Аль-Кафи",
-                chapter="Книга разума и невежества",
                 number=1,
                 text_arabic="عن أبي عبد الله عليه السلام قال: دعائم الكفر ثلاثة: الحرص والاستكبار والحسد",
                 text_russian="От Абу Абдуллаха (мир ему) передано: Столпов неверия три: алчность, высокомерие и зависть.",
@@ -221,7 +215,6 @@ class ProductionDataLoader:
             ),
             Hadith(
                 collection="Аль-Кафи",
-                chapter="Книга веры и неверия",
                 number=2,
                 text_arabic="عن أبي جعفر عليه السلام قال: الإيمان معرفة بالقلب وإقرار باللسان وعمل بالأركان",
                 text_russian="От Абу Джафара (мир ему) передано: Вера - это познание сердцем, признание языком и действие органами.",
@@ -230,8 +223,7 @@ class ProductionDataLoader:
             ),
             Hadith(
                 collection="Аль-Кафи",
-                chapter="Книга молитвы",
-                number=1,
+                number=3,
                 text_arabic="عن أبي عبد الله عليه السلام قال: الصلاة قربان كل تقي",
                 text_russian="От Абу Абдуллаха (мир ему) передано: Молитва - жертвоприношение каждого благочестивого.",
                 commentary="Значение молитвы в шиизме.",

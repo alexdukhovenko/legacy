@@ -344,14 +344,33 @@ class FullDataLoader:
     def load_production_data(self):
         """Загружает расширенные данные для продакшена"""
         try:
-            from .load_production_data import ProductionDataLoader
-            logger.info("📚 Загружаем расширенные данные для продакшена...")
-            loader = ProductionDataLoader()
-            loader.load_extended_sample_data()
-            loader.close()
-            logger.info("✅ Расширенные данные загружены")
+            # Сначала пробуем загрузить из внешнего репозитория
+            from ..backend.data_loader import load_external_data
+            logger.info("📚 Загружаем данные из внешнего репозитория...")
+            external_stats = load_external_data(self.db)
+            logger.info(f"✅ Внешние данные загружены: {external_stats}")
+            
+            # Если внешние данные не загрузились, используем локальные
+            if not external_stats:
+                from .load_production_data import ProductionDataLoader
+                logger.info("📚 Загружаем локальные расширенные данные...")
+                loader = ProductionDataLoader()
+                loader.load_extended_sample_data()
+                loader.close()
+                logger.info("✅ Локальные расширенные данные загружены")
+                
         except Exception as e:
-            logger.warning(f"⚠️ Не удалось загрузить расширенные данные: {e}")
+            logger.warning(f"⚠️ Не удалось загрузить данные: {e}")
+            # Fallback на локальные данные
+            try:
+                from .load_production_data import ProductionDataLoader
+                logger.info("📚 Fallback: загружаем локальные данные...")
+                loader = ProductionDataLoader()
+                loader.load_extended_sample_data()
+                loader.close()
+                logger.info("✅ Локальные данные загружены")
+            except Exception as e2:
+                logger.error(f"❌ Критическая ошибка загрузки данных: {e2}")
         finally:
             self.db.close()
 
