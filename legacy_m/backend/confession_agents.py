@@ -607,6 +607,10 @@ class ShiaAgent(BaseConfessionAgent):
 class OrthodoxAgent(BaseConfessionAgent):
     """AI агент для православия"""
     
+    def __init__(self, db: Session):
+        super().__init__(db)
+        self.confession_name = "orthodox"
+    
     def _get_system_prompt(self) -> str:
         return """Ты православный духовный наставник. Отвечай ТОЛЬКО на вопросы, связанные с православием.
 
