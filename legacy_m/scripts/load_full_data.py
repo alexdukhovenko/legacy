@@ -33,13 +33,21 @@ class FullDataLoader:
         """Загружает Коран из файлов"""
         logger.info("📖 Загружаем Коран из файлов...")
         
-        quran_arabic_file = self.data_path / "Коран" / "quran_arabic.txt"
-        quran_russian_file = self.data_path / "Коран" / "quran_russian.txt"
+        # Загружаем Коран из папки Суннизм
+        sunni_quran_file = self.data_path / "Суннизм" / "Коран. Все переводы.pdf"
+        if sunni_quran_file.exists():
+            logger.info("📖 Найден Коран в папке Суннизм")
+            # TODO: Добавить парсинг PDF файла
         
-        if not quran_arabic_file.exists() or not quran_russian_file.exists():
-            logger.warning("⚠️ Файлы Корана не найдены, используем примерные данные")
-            self._load_sample_quran()
-            return
+        # Загружаем Коран из папки Шиизм
+        shia_quran_file = self.data_path / "Шиизм" / "Коран. Все переводы.pdf"
+        if shia_quran_file.exists():
+            logger.info("📖 Найден Коран в папке Шиизм")
+            # TODO: Добавить парсинг PDF файла
+        
+        # Пока используем примерные данные
+        logger.warning("⚠️ PDF файлы требуют парсинга, используем примерные данные")
+        self._load_sample_quran()
         
         # Парсим арабский текст
         arabic_verses = self._parse_quran_file(quran_arabic_file, "arabic")
@@ -136,18 +144,19 @@ class FullDataLoader:
         """Загружает хадисы из файлов"""
         logger.info("📜 Загружаем хадисы из файлов...")
         
-        hadith_sources = ['Бухари', 'Муслим', 'Аль-Кафи']
+        # Загружаем из папки Шиизм
+        shia_path = self.data_path / "Шиизм"
+        if shia_path.exists():
+            logger.info("📜 Загружаем шиитские источники...")
+            for file_path in shia_path.glob("*.txt"):
+                self._load_hadith_file(file_path, "Шиизм")
         
-        for source in hadith_sources:
-            source_path = self.data_path / "Хадисы" / source
-            
-            if not source_path.exists():
-                logger.warning(f"⚠️ Папка {source} не найдена")
-                continue
-            
-            # Ищем файлы в папке
-            for file_path in source_path.glob("*.txt"):
-                self._load_hadith_file(file_path, source)
+        # Загружаем из папки Суннизм
+        sunni_path = self.data_path / "Суннизм"
+        if sunni_path.exists():
+            logger.info("📜 Загружаем суннитские источники...")
+            for file_path in sunni_path.glob("*.txt"):
+                self._load_hadith_file(file_path, "Суннизм")
         
         logger.info("✅ Хадисы загружены из файлов")
     

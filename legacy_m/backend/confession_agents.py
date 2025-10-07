@@ -160,10 +160,9 @@ class SunniAgent(BaseConfessionAgent):
     
     def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Поиск в суннитских источниках"""
-        # Поиск в Коране (общие аяты + суннитские)
+        # Поиск в Коране (только суннитские источники)
         quran_query = self.db.query(QuranVerse).filter(
             or_(
-                QuranVerse.confession == 'common',
                 QuranVerse.confession == 'sunni',
                 QuranVerse.confession.is_(None)
             )
@@ -171,18 +170,12 @@ class SunniAgent(BaseConfessionAgent):
         
         # Поиск в хадисах (только суннитские)
         hadith_query = self.db.query(Hadith).filter(
-            or_(
-                Hadith.confession == 'common',
-                Hadith.confession == 'sunni'
-            )
+            Hadith.confession == 'sunni'
         )
         
         # Поиск в комментариях (только суннитские)
         commentary_query = self.db.query(Commentary).filter(
-            or_(
-                Commentary.confession == 'common',
-                Commentary.confession == 'sunni'
-            )
+            Commentary.confession == 'sunni'
         )
         
         # Объединяем результаты
@@ -392,10 +385,9 @@ class ShiaAgent(BaseConfessionAgent):
     
     def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Поиск в шиитских источниках"""
-        # Поиск в Коране (общие аяты + шиитские)
+        # Поиск в Коране (только шиитские источники)
         quran_query = self.db.query(QuranVerse).filter(
             or_(
-                QuranVerse.confession == 'common',
                 QuranVerse.confession == 'shia',
                 QuranVerse.confession.is_(None)
             )
@@ -403,18 +395,12 @@ class ShiaAgent(BaseConfessionAgent):
         
         # Поиск в хадисах (только шиитские)
         hadith_query = self.db.query(Hadith).filter(
-            or_(
-                Hadith.confession == 'common',
-                Hadith.confession == 'shia'
-            )
+            Hadith.confession == 'shia'
         )
         
         # Поиск в комментариях (только шиитские)
         commentary_query = self.db.query(Commentary).filter(
-            or_(
-                Commentary.confession == 'common',
-                Commentary.confession == 'shia'
-            )
+            Commentary.confession == 'shia'
         )
         
         # Объединяем результаты (аналогично SunniAgent)
