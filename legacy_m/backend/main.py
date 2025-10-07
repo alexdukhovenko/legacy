@@ -465,12 +465,11 @@ if __name__ == "__main__":
     environment = os.getenv("ENVIRONMENT", "development")
     
     if environment == "production":
-        # Настройки для продакшена
+        # Настройки для продакшена - используем uvicorn без workers
         uvicorn.run(
             app, 
             host=host, 
             port=port, 
-            workers=workers,
             access_log=True,
             log_level="info"
         )
