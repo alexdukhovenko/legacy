@@ -306,7 +306,14 @@ async def chat_with_ai(request: ChatRequest, db: Session = Depends(get_db)):
         raise
     except Exception as e:
         logger.error(f"❌ Ошибка в чате: {e}")
-        raise HTTPException(status_code=500, detail="Внутренняя ошибка сервера")
+        import traceback
+        logger.error(f"❌ Traceback: {traceback.format_exc()}")
+        return ChatResponse(
+            response="Извините, произошла ошибка. Попробуйте еще раз.",
+            sources=[],
+            confidence=0.0,
+            session_id="error"
+        )
 
 @app.get("/api/user/{user_id}/chat/{confession}", response_model=ChatHistoryResponse)
 async def get_user_chat_history(user_id: str, confession: str, db: Session = Depends(get_db)):
