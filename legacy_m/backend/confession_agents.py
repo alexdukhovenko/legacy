@@ -894,6 +894,6 @@ class ConfessionAgentFactory:
         elif confession == 'shia':
             return ShiaAgent(confession, db)
         elif confession == 'orthodox':
-            return OrthodoxAgent(confession, db)
+            return OrthodoxAgent(db)
         else:
             raise ValueError(f"Неподдерживаемая конфессия: {confession}")
