@@ -11,6 +11,12 @@ from .models import Base
 # Путь к базе данных
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./legacy_m.db")
 
+# Исправляем некорректный DATABASE_URL
+if DATABASE_URL and "port" in DATABASE_URL and not DATABASE_URL.startswith("postgresql://"):
+    print(f"⚠️ Обнаружен некорректный DATABASE_URL: {DATABASE_URL}")
+    DATABASE_URL = "sqlite:///./legacy_m.db"
+    print(f"✅ Используем SQLite: {DATABASE_URL}")
+
 # Создание движка базы данных
 engine = create_engine(
     DATABASE_URL,
