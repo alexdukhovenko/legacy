@@ -263,8 +263,13 @@ async def chat_with_ai(request: ChatRequest, db: Session = Depends(get_db)):
         db.add(user_message)
         
         # Создаем ИИ-агента и получаем ответ с учетом конфессии
+        logger.info(f"🤖 Создаем AI агента для конфессии: {request.confession}")
         ai_agent = SimpleIslamicAIAgent(db)
+        logger.info(f"✅ AI агент создан успешно")
+        
+        logger.info(f"💬 Генерируем ответ на вопрос: {request.message[:50]}...")
         ai_response = ai_agent.generate_response(request.message, request.confession)
+        logger.info(f"✅ Ответ получен: {ai_response.get('response', '')[:100]}...")
         
         # Постобработка: принудительно сокращаем длинные ответы
         if len(ai_response['response']) > 800:
