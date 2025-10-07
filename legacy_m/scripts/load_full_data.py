@@ -331,12 +331,27 @@ class FullDataLoader:
             self.load_hadith_from_files()
             self.load_orthodox_from_files()
             
+            # Загружаем расширенные данные для продакшена
+            self.load_production_data()
+            
             logger.info("✅ Полная загрузка данных завершена!")
             
         except Exception as e:
             logger.error(f"❌ Ошибка загрузки данных: {e}")
             import traceback
             logger.error(f"Traceback: {traceback.format_exc()}")
+    
+    def load_production_data(self):
+        """Загружает расширенные данные для продакшена"""
+        try:
+            from .load_production_data import ProductionDataLoader
+            logger.info("📚 Загружаем расширенные данные для продакшена...")
+            loader = ProductionDataLoader()
+            loader.load_extended_sample_data()
+            loader.close()
+            logger.info("✅ Расширенные данные загружены")
+        except Exception as e:
+            logger.warning(f"⚠️ Не удалось загрузить расширенные данные: {e}")
         finally:
             self.db.close()
 
