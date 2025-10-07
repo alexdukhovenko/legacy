@@ -12,6 +12,7 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 from database.models import QuranVerse, Hadith, Commentary, OrthodoxText, OrthodoxDocument
+from .ai_providers import ai_manager
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -250,17 +251,13 @@ class SunniAgent(BaseConfessionAgent):
         Ответь кратко по примеру выше. НЕ копируй длинные цитаты!"""
         
         try:
-            ai_response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                max_tokens=800,
-                temperature=0.3
-            )
+            # Используем менеджер AI провайдеров с fallback
+            messages = [
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
             
-            response_text = ai_response.choices[0].message.content.strip()
+            response_text = ai_manager.generate_response(messages, max_tokens=800)
             
             # Постобработка
             if "Интерпретация:" in response_text:
@@ -478,17 +475,13 @@ class ShiaAgent(BaseConfessionAgent):
         Ответь кратко по примеру выше. НЕ копируй длинные цитаты!"""
         
         try:
-            ai_response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                max_tokens=800,
-                temperature=0.3
-            )
+            # Используем менеджер AI провайдеров с fallback
+            messages = [
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
             
-            response_text = ai_response.choices[0].message.content.strip()
+            response_text = ai_manager.generate_response(messages, max_tokens=800)
             
             # Постобработка
             if "Интерпретация:" in response_text:
@@ -722,17 +715,13 @@ class OrthodoxAgent(BaseConfessionAgent):
         Ответь кратко по примеру выше. НЕ копируй длинные цитаты!"""
         
         try:
-            ai_response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                max_tokens=800,
-                temperature=0.3
-            )
+            # Используем менеджер AI провайдеров с fallback
+            messages = [
+                {"role": "system", "content": self.system_prompt},
+                {"role": "user", "content": user_prompt}
+            ]
             
-            response_text = ai_response.choices[0].message.content.strip()
+            response_text = ai_manager.generate_response(messages, max_tokens=800)
             
             # Постобработка
             if "Интерпретация:" in response_text:
