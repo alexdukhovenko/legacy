@@ -34,6 +34,12 @@ def main():
         load_sample_orthodox_data()
         print("✅ Orthodox data loaded")
         
+        # Загрузка исламских данных
+        print("📚 Loading Islamic data...")
+        from scripts.load_sample_islamic import load_sample_islamic_data
+        load_sample_islamic_data()
+        print("✅ Islamic data loaded")
+        
         print("✅ Initialization completed successfully!")
         
     except Exception as e:
