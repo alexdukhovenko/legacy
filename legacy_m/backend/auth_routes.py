@@ -26,6 +26,10 @@ class RegisterRequest(BaseModel):
     password: str
     email: str = None
     name: str = None
+    
+    class Config:
+        # Разрешаем None значения
+        from_attributes = True
 
 
 class LoginRequest(BaseModel):
@@ -49,6 +53,10 @@ class UserResponse(BaseModel):
     is_verified: bool
     created_at: str
     last_activity: str
+    
+    class Config:
+        # Разрешаем None значения для всех полей
+        from_attributes = True
 
 
 @auth_router.post("/register", response_model=Dict[str, Any])
@@ -200,9 +208,9 @@ async def get_current_user_info(
         return UserResponse(
             id=current_user.id,
             username=current_user.username,
-            name=current_user.name,
-            email=current_user.email,
-            confession=current_user.confession,
+            name=current_user.name or "",
+            email=current_user.email or "",
+            confession=current_user.confession or "",
             is_verified=bool(current_user.is_verified),
             created_at=current_user.created_at.isoformat(),
             last_activity=current_user.last_activity.isoformat()

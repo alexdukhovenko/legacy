@@ -268,7 +268,9 @@
         // Показать сообщение об ошибке
         function showError(message) {
             const errorDiv = document.getElementById('error-message');
-            errorDiv.textContent = message;
+            // Преобразуем объект в строку, если это необходимо
+            const errorText = typeof message === 'object' ? JSON.stringify(message) : message;
+            errorDiv.textContent = errorText;
             errorDiv.style.display = 'block';
             document.getElementById('success-message').style.display = 'none';
         }
@@ -419,7 +421,13 @@
                         document.getElementById('login-username').value = username;
                     }, 1500);
                 } else {
-                    showError(data.detail || 'Ошибка регистрации');
+                    // Обрабатываем ошибки валидации
+                    if (data.detail && Array.isArray(data.detail)) {
+                        const errors = data.detail.map(err => err.msg || err.message || err).join(', ');
+                        showError(errors);
+                    } else {
+                        showError(data.detail || 'Ошибка регистрации');
+                    }
                 }
             } catch (error) {
                 showError('Ошибка соединения с сервером');
