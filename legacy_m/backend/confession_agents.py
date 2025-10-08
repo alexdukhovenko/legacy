@@ -212,7 +212,7 @@ class SunniAgent(BaseConfessionAgent):
         # Добавляем хадисы
         for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
-            if score > 0.001:  # Еще более низкий порог для исламских агентов
+            if score > 0.0001:  # Очень низкий порог для исламских агентов
                 results.append({
                     'type': 'hadith',
                     'content': {
@@ -445,7 +445,7 @@ class ShiaAgent(BaseConfessionAgent):
         # Добавляем хадисы
         for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
-            if score > 0.001:  # Еще более низкий порог для исламских агентов
+            if score > 0.0001:  # Очень низкий порог для исламских агентов
                 results.append({
                     'type': 'hadith',
                     'content': {

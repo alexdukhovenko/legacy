@@ -12,10 +12,12 @@ from .models import Base
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./legacy_m.db")
 
 # Проверяем DATABASE_URL
-if DATABASE_URL and DATABASE_URL.startswith("postgresql://"):
+if DATABASE_URL and ("postgresql://" in DATABASE_URL or "postgres://" in DATABASE_URL):
     print(f"✅ Используем PostgreSQL: {DATABASE_URL[:20]}...")
-elif DATABASE_URL and "postgres" in DATABASE_URL:
-    print(f"✅ Используем PostgreSQL: {DATABASE_URL[:20]}...")
+    # Убеждаемся, что используем правильный формат
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        print(f"✅ Исправлен формат URL: {DATABASE_URL[:20]}...")
 else:
     print(f"⚠️ Используем SQLite: {DATABASE_URL}")
 
