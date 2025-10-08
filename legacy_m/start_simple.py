@@ -22,11 +22,11 @@ def main():
         init_database()
         print("✅ Database initialized")
         
-               # Загрузка простых данных
-               print("📚 Loading simple data...")
-               from scripts.load_simple_data import load_simple_data
-               load_simple_data()
-               print("✅ Simple data loaded")
+        # Загрузка простых данных
+        print("📚 Loading simple data...")
+        from scripts.load_simple_data import load_simple_data
+        load_simple_data()
+        print("✅ Simple data loaded")
         
         print("✅ Initialization completed successfully!")
         
