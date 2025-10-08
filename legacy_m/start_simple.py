@@ -22,6 +22,12 @@ def main():
         init_database()
         print("✅ Database initialized")
         
+        # Миграция для системы аутентификации
+        print("🔐 Running authentication migration...")
+        from scripts.migrate_auth import migrate_database
+        migrate_database()
+        print("✅ Authentication migration completed")
+        
         # Загрузка простых данных
         print("📚 Loading simple data...")
         from scripts.load_simple_data import load_simple_data

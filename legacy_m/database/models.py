@@ -148,16 +148,26 @@ class VectorEmbedding(Base):
 
 
 class User(Base):
-    """Таблица для пользователей"""
+    """Таблица для пользователей с системой аутентификации"""
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String(255), unique=True, nullable=False, index=True)  # Уникальный ID пользователя
+    username = Column(String(100), unique=True, nullable=False, index=True)  # Уникальный логин
+    email = Column(String(255), unique=True, nullable=True, index=True)  # Email (опционально)
+    password_hash = Column(String(255), nullable=False)  # Хеш пароля
     name = Column(String(255), nullable=True)  # Имя пользователя (опционально)
     confession = Column(String(50), nullable=True, index=True)  # Конфессия: 'sunni', 'shia', 'orthodox', null
+    is_verified = Column(Integer, default=0)  # 1 = verified, 0 = not verified
+    is_active = Column(Integer, default=1)  # 1 = active, 0 = inactive
     created_at = Column(DateTime, default=datetime.utcnow)
     last_activity = Column(DateTime, default=datetime.utcnow)
-    is_active = Column(Integer, default=1)  # 1 = active, 0 = inactive
+    last_login = Column(DateTime, nullable=True)
+    
+    # Индексы
+    __table_args__ = (
+        Index('idx_username', 'username'),
+        Index('idx_email', 'email'),
+    )
 
 
 class UserSession(Base):
@@ -190,6 +200,80 @@ class ChatMessage(Base):
     
     # Связи
     session = relationship("UserSession", backref="messages")
+
+
+class UserToken(Base):
+    """Таблица для JWT токенов пользователей"""
+    __tablename__ = "user_tokens"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    token_hash = Column(String(255), nullable=False, index=True)  # Хеш JWT токена
+    token_type = Column(String(20), nullable=False, default='access')  # 'access', 'refresh'
+    expires_at = Column(DateTime, nullable=False)
+    is_revoked = Column(Integer, default=0)  # 1 = revoked, 0 = active
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Связи
+    user = relationship("User", backref="tokens")
+    
+    # Индексы
+    __table_args__ = (
+        Index('idx_token_hash', 'token_hash'),
+        Index('idx_user_token_type', 'user_id', 'token_type'),
+    )
+
+
+class UserLog(Base):
+    """Таблица для логов активности пользователей"""
+    __tablename__ = "user_logs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    action = Column(String(100), nullable=False, index=True)  # 'login', 'logout', 'chat', 'error', etc.
+    details = Column(Text, nullable=True)  # Детали действия
+    ip_address = Column(String(45), nullable=True)  # IPv4 или IPv6
+    user_agent = Column(Text, nullable=True)  # User-Agent браузера
+    session_id = Column(String(255), nullable=True, index=True)
+    error_code = Column(String(50), nullable=True, index=True)  # Код ошибки если есть
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Связи
+    user = relationship("User", backref="logs")
+    
+    # Индексы
+    __table_args__ = (
+        Index('idx_user_action', 'user_id', 'action'),
+        Index('idx_user_created', 'user_id', 'created_at'),
+        Index('idx_error_code', 'error_code'),
+    )
+
+
+class UserChatHistory(Base):
+    """Таблица для истории чатов пользователей с контекстом"""
+    __tablename__ = "user_chat_history"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
+    session_id = Column(String(255), nullable=False, index=True)
+    confession = Column(String(50), nullable=False, index=True)  # Конфессия для этого чата
+    message_sequence = Column(Integer, nullable=False, default=0)  # Порядок сообщений в сессии
+    user_message = Column(Text, nullable=False)  # Сообщение пользователя
+    ai_response = Column(Text, nullable=True)  # Ответ AI
+    ai_sources = Column(Text, nullable=True)  # JSON источников AI
+    context_summary = Column(Text, nullable=True)  # Краткое резюме контекста
+    processing_time = Column(Float, nullable=True)  # Время обработки в секундах
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Связи
+    user = relationship("User", backref="chat_history")
+    
+    # Индексы
+    __table_args__ = (
+        Index('idx_user_session', 'user_id', 'session_id'),
+        Index('idx_user_confession', 'user_id', 'confession'),
+        Index('idx_session_sequence', 'session_id', 'message_sequence'),
+    )
 
 
 class SystemConfig(Base):

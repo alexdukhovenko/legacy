@@ -33,6 +33,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from database import get_db, init_database, User, UserSession, ChatMessage
 from database.models import QuranVerse, Hadith
 from backend.simple_ai_agent import SimpleIslamicAIAgent
+from backend.auth_routes import auth_router
+from backend.auth_middleware import get_current_user, get_current_user_optional
+from backend.auth_system import auth_system
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -56,6 +59,9 @@ app.add_middleware(
 
 # Подключение статических файлов
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
+
+# Подключение роутеров аутентификации
+app.include_router(auth_router)
 
 # Модели Pydantic
 class UserRequest(BaseModel):
@@ -225,32 +231,29 @@ async def create_or_get_user(request: UserRequest, db: Session = Depends(get_db)
         raise HTTPException(status_code=500, detail="Ошибка работы с пользователем")
 
 @app.post("/api/chat", response_model=ChatResponse)
-async def chat_with_ai(request: ChatRequest, db: Session = Depends(get_db)):
-    """Чат с ИИ-наставником для конкретной конфессии"""
+async def chat_with_ai(
+    request: ChatRequest, 
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Чат с ИИ-наставником для конкретной конфессии (требует аутентификации)"""
     try:
-        # Проверяем, существует ли пользователь
-        user = db.query(User).filter(User.user_id == request.user_id).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="Пользователь не найден")
+        # Используем аутентифицированного пользователя
+        user = current_user
         
         # Получаем или создаем сессию для конкретной конфессии
         session = db.query(UserSession).filter(
-            UserSession.user_id == request.user_id,
+            UserSession.user_id == str(user.id),
             UserSession.confession == request.confession,
             UserSession.is_active == 1
         ).first()
         
         if not session:
             # Создаем новую сессию для этой конфессии
-            session_id = str(uuid.uuid4())
-            session = UserSession(
-                user_id=request.user_id,
-                session_id=session_id,
-                confession=request.confession
-            )
-            db.add(session)
-            db.commit()
-            logger.info(f"✅ Создана новая сессия для пользователя {request.user_id} и конфессии {request.confession}")
+            session_id = auth_system.create_user_session(user.id, request.confession)
+            if not session_id:
+                raise HTTPException(status_code=500, detail="Ошибка создания сессии")
+            logger.info(f"✅ Создана новая сессия для пользователя {user.id} и конфессии {request.confession}")
         else:
             session_id = session.session_id
         

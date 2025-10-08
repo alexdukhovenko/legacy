@@ -30,17 +30,64 @@
             backdrop-filter: blur(10px);
         }
 
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
         .header h1 {
             font-size: 2rem;
             color: #d4af37;
-            text-align: center;
             font-weight: 700;
+            margin: 0;
         }
 
         .header p {
-            text-align: center;
             margin-top: 0.5rem;
             opacity: 0.8;
+            margin: 0;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-button {
+            padding: 8px 16px;
+            background: rgba(212, 175, 55, 0.8);
+            color: #2c1810;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .auth-button:hover {
+            background: #d4af37;
+            transform: translateY(-1px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #f4e4bc;
+        }
+
+        .user-name {
+            font-weight: 500;
         }
 
         .user-panel {
@@ -487,8 +534,22 @@
 </head>
 <body>
     <div class="header">
-        <h1>LEGACY M</h1>
-        <p>Цифровая платформа духовного наставничества</p>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>LEGACY M</h1>
+                <p>Цифровая платформа духовного наставничества</p>
+            </div>
+            <div id="auth-section">
+                <div id="auth-buttons" class="auth-buttons" style="display: none;">
+                    <a href="/frontend/auth.html" class="auth-button">Войти</a>
+                    <a href="/frontend/auth.html" class="auth-button">Регистрация</a>
+                </div>
+                <div id="user-info" class="user-info" style="display: none;">
+                    <span class="user-name" id="user-name"></span>
+                    <button class="auth-button" onclick="logout()">Выйти</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="user-panel" id="userPanel" style="display: none;">
@@ -1010,6 +1071,108 @@
                 hideSourceModal();
             }
         }
+
+        // ===== СИСТЕМА АУТЕНТИФИКАЦИИ =====
+        
+        // Получить токен из localStorage
+        function getAuthToken() {
+            return localStorage.getItem('auth_token');
+        }
+
+        // Сохранить токен в localStorage
+        function saveAuthToken(token) {
+            localStorage.setItem('auth_token', token);
+        }
+
+        // Удалить токен из localStorage
+        function removeAuthToken() {
+            localStorage.removeItem('auth_token');
+        }
+
+        // Проверить аутентификацию
+        async function checkAuth() {
+            const token = getAuthToken();
+            if (!token) {
+                showAuthButtons();
+                return false;
+            }
+
+            try {
+                const response = await fetch('/api/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const userData = await response.json();
+                    showUserInfo(userData);
+                    return true;
+                } else {
+                    // Токен недействителен
+                    removeAuthToken();
+                    showAuthButtons();
+                    return false;
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                showAuthButtons();
+                return false;
+            }
+        }
+
+        // Показать кнопки входа/регистрации
+        function showAuthButtons() {
+            document.getElementById('auth-buttons').style.display = 'flex';
+            document.getElementById('user-info').style.display = 'none';
+        }
+
+        // Показать информацию о пользователе
+        function showUserInfo(userData) {
+            document.getElementById('auth-buttons').style.display = 'none';
+            document.getElementById('user-info').style.display = 'flex';
+            document.getElementById('user-name').textContent = userData.name || userData.username;
+        }
+
+        // Выход из системы
+        async function logout() {
+            const token = getAuthToken();
+            if (!token) return;
+
+            try {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            } finally {
+                removeAuthToken();
+                showAuthButtons();
+                // Очищаем чат
+                document.getElementById('chatMessages').innerHTML = '';
+                document.getElementById('userPanel').style.display = 'none';
+            }
+        }
+
+        // Проверяем аутентификацию при загрузке страницы
+        window.addEventListener('load', async () => {
+            const isAuthenticated = await checkAuth();
+            if (!isAuthenticated) {
+                // Если не аутентифицирован, показываем сообщение
+                document.getElementById('chatMessages').innerHTML = `
+                    <div class="message ai-message">
+                        <div class="message-content">
+                            <p>Добро пожаловать в LEGACY M!</p>
+                            <p>Для использования чата с ИИ-наставником необходимо войти в систему.</p>
+                            <p>Пожалуйста, <a href="/frontend/auth.html" style="color: #d4af37;">войдите</a> или <a href="/frontend/auth.html" style="color: #d4af37;">зарегистрируйтесь</a>.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
     </script>
 </body>
 </html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEGACY M - Аутентификация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #2c1810 0%, #3d2817 25%, #4a2c1a 50%, #5d3a1f 75%, #6b4224 100%);
+            color: #f4e4bc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: rgba(44, 24, 16, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            color: #d4af37;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .auth-header p {
+            color: #f4e4bc;
+            opacity: 0.8;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: #f4e4bc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .auth-tab.active {
+            background: rgba(212, 175, 55, 0.8);
+            color: #2c1810;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #f4e4bc;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #f4e4bc;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(244, 228, 188, 0.5);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.8);
+            color: #2c1810;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .auth-button:hover {
+            background: #d4af37;
+            transform: translateY(-2px);
+        }
+
+        .auth-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.5);
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.5);
+            color: #51cf66;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #d4af37;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .back-to-chat {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-to-chat a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-to-chat a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>LEGACY M</h1>
+            <p>Духовное наставничество</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">Вход</button>
+            <button class="auth-tab" onclick="switchTab('register')">Регистрация</button>
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+
+        <!-- Форма входа -->
+        <form id="login-form" class="auth-form active">
+            <div class="form-group">
+                <label for="login-username">Логин</label>
+                <input type="text" id="login-username" placeholder="Введите логин" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Пароль</label>
+                <input type="password" id="login-password" placeholder="Введите пароль" required>
+            </div>
+            <button type="submit" class="auth-button">Войти</button>
+            <div class="loading" id="login-loading">Вход в систему...</div>
+        </form>
+
+        <!-- Форма регистрации -->
+        <form id="register-form" class="auth-form">
+            <div class="form-group">
+                <label for="register-username">Логин</label>
+                <input type="text" id="register-username" placeholder="Введите логин (минимум 3 символа)" required>
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email (опционально)</label>
+                <input type="email" id="register-email" placeholder="Введите email">
+            </div>
+            <div class="form-group">
+                <label for="register-name">Имя (опционально)</label>
+                <input type="text" id="register-name" placeholder="Введите ваше имя">
+            </div>
+            <div class="form-group">
+                <label for="register-password">Пароль</label>
+                <input type="password" id="register-password" placeholder="Введите пароль (минимум 6 символов)" required>
+            </div>
+            <div class="form-group">
+                <label for="register-confirm-password">Подтвердите пароль</label>
+                <input type="password" id="register-confirm-password" placeholder="Подтвердите пароль" required>
+            </div>
+            <button type="submit" class="auth-button">Зарегистрироваться</button>
+            <div class="loading" id="register-loading">Регистрация...</div>
+        </form>
+
+        <div class="back-to-chat">
+            <a href="/frontend/index.html">← Вернуться к чату</a>
+        </div>
+    </div>
+
+    <script>
+        // Переключение между вкладками
+        function switchTab(tab) {
+            // Обновляем активные вкладки
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelector('.auth-tab:first-child').classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelector('.auth-tab:last-child').classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+            }
+            
+            // Очищаем сообщения
+            hideMessages();
+        }
+
+        // Показать сообщение об ошибке
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Показать сообщение об успехе
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        // Скрыть все сообщения
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Показать/скрыть загрузку
+        function setLoading(formType, show) {
+            const loading = document.getElementById(`${formType}-loading`);
+            const button = document.querySelector(`#${formType}-form .auth-button`);
+            
+            if (show) {
+                loading.classList.add('show');
+                button.disabled = true;
+            } else {
+                loading.classList.remove('show');
+                button.disabled = false;
+            }
+        }
+
+        // Сохранить токен в localStorage
+        function saveAuthToken(token) {
+            localStorage.setItem('auth_token', token);
+        }
+
+        // Получить токен из localStorage
+        function getAuthToken() {
+            return localStorage.getItem('auth_token');
+        }
+
+        // Обработка входа
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                showError('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            setLoading('login', true);
+            hideMessages();
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Сохраняем токен
+                    saveAuthToken(data.access_token);
+                    
+                    showSuccess('Успешный вход в систему!');
+                    
+                    // Перенаправляем на чат через 1 секунду
+                    setTimeout(() => {
+                        window.location.href = '/frontend/index.html';
+                    }, 1000);
+                } else {
+                    showError(data.detail || 'Ошибка входа');
+                }
+            } catch (error) {
+                showError('Ошибка соединения с сервером');
+                console.error('Login error:', error);
+            } finally {
+                setLoading('login', false);
+            }
+        });
+
+        // Обработка регистрации
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const name = document.getElementById('register-name').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            if (!username || !password) {
+                showError('Пожалуйста, заполните обязательные поля');
+                return;
+            }
+            
+            if (username.length < 3) {
+                showError('Логин должен содержать минимум 3 символа');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('Пароль должен содержать минимум 6 символов');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Пароли не совпадают');
+                return;
+            }
+            
+            setLoading('register', true);
+            hideMessages();
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email || null,
+                        name: name || null,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showSuccess('Регистрация успешна! Теперь вы можете войти в систему.');
+                    
+                    // Переключаемся на вкладку входа
+                    setTimeout(() => {
+                        switchTab('login');
+                        document.getElementById('login-username').value = username;
+                    }, 1500);
+                } else {
+                    showError(data.detail || 'Ошибка регистрации');
+                }
+            } catch (error) {
+                showError('Ошибка соединения с сервером');
+                console.error('Register error:', error);
+            } finally {
+                setLoading('register', false);
+            }
+        });
+
+        // Проверяем, есть ли уже токен при загрузке страницы
+        window.addEventListener('load', () => {
+            const token = getAuthToken();
+            if (token) {
+                // Если есть токен, перенаправляем на чат
+                window.location.href = '/frontend/index.html';
+            }
+        });
+    </script>
+</body>
+</html>
