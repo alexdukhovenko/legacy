@@ -244,7 +244,8 @@ class SunniAgent(BaseConfessionAgent):
                 all_results.append(f"Хадис {hadith.id}: score={score:.8f}")
             logger.warning(f"📊 Первые 5 хадисов с scores: {all_results}")
         else:
-            logger.info(f"✅ SunniAgent: Найдено {len(results)} источников с scores: {[f'{r[\"similarity_score\"]:.8f}' for r in results[:3]]}")
+            scores = [f"{r['similarity_score']:.8f}" for r in results[:3]]
+            logger.info(f"✅ SunniAgent: Найдено {len(results)} источников с scores: {scores}")
         
         return results[:limit]
     
@@ -491,7 +492,8 @@ class ShiaAgent(BaseConfessionAgent):
                 all_results.append(f"Хадис {hadith.id}: score={score:.8f}")
             logger.warning(f"📊 Первые 5 хадисов с scores: {all_results}")
         else:
-            logger.info(f"✅ ShiaAgent: Найдено {len(results)} источников с scores: {[f'{r[\"similarity_score\"]:.8f}' for r in results[:3]]}")
+            scores = [f"{r['similarity_score']:.8f}" for r in results[:3]]
+            logger.info(f"✅ ShiaAgent: Найдено {len(results)} источников с scores: {scores}")
         
         return results[:limit]
     
