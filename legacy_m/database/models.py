@@ -84,6 +84,7 @@ class OrthodoxText(Base):
     __tablename__ = "orthodox_texts"
     
     id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey('orthodox_documents.id'), nullable=True)  # Связь с документом
     source_type = Column(String(50), nullable=False, index=True)  # 'bible', 'patristic', 'dogmatic', 'liturgical'
     book_name = Column(String(255), nullable=False, index=True)  # Название книги
     author = Column(String(255), nullable=True, index=True)  # Автор (святой отец, богослов)

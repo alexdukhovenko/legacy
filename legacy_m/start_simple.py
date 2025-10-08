@@ -22,11 +22,11 @@ def main():
         init_database()
         print("✅ Database initialized")
         
-        # Загрузка всех данных из файлов
-        print("📚 Loading all data from files...")
-        from scripts.load_full_data import main as load_full_data
-        load_full_data()
-        print("✅ All data loaded from files")
+               # Загрузка простых данных
+               print("📚 Loading simple data...")
+               from scripts.load_simple_data import load_simple_data
+               load_simple_data()
+               print("✅ Simple data loaded")
         
         print("✅ Initialization completed successfully!")
         

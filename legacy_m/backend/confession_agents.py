@@ -12,7 +12,7 @@ from typing import List, Dict, Any, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 from database.models import QuranVerse, Hadith, Commentary, OrthodoxText, OrthodoxDocument
-from .ai_providers import ai_manager
+from .simple_ai_provider import simple_ai_provider
 from .simple_fallback import simple_fallback
 from .enhanced_ai_agent import EnhancedAIAgent
 
@@ -253,7 +253,7 @@ class SunniAgent(BaseConfessionAgent):
             ]
             
             try:
-                response_text = ai_manager.generate_response(messages, max_tokens=800)
+                response_text = simple_ai_provider.generate_response(messages, max_tokens=800)
                 logger.info(f"✅ Ответ от AI провайдера получен")
             except Exception as e:
                 logger.error(f"❌ Ошибка AI провайдера: {e}")
@@ -478,7 +478,7 @@ class ShiaAgent(BaseConfessionAgent):
             ]
             
             try:
-                response_text = ai_manager.generate_response(messages, max_tokens=800)
+                response_text = simple_ai_provider.generate_response(messages, max_tokens=800)
                 logger.info(f"✅ Ответ от AI провайдера получен")
             except Exception as e:
                 logger.error(f"❌ Ошибка AI провайдера: {e}")
@@ -730,7 +730,7 @@ class OrthodoxAgent(BaseConfessionAgent):
             ]
             
             try:
-                response_text = ai_manager.generate_response(messages, max_tokens=800)
+                response_text = simple_ai_provider.generate_response(messages, max_tokens=800)
                 logger.info(f"✅ Ответ от AI провайдера получен")
             except Exception as e:
                 logger.error(f"❌ Ошибка AI провайдера: {e}")
