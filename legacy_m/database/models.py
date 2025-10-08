@@ -175,7 +175,7 @@ class UserSession(Base):
     __tablename__ = "user_sessions"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String(255), ForeignKey('users.user_id'), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)  # Ссылка на users.id
     session_id = Column(String(255), unique=True, nullable=False, index=True)
     confession = Column(String(50), nullable=False, index=True)  # 'sunni', 'shia', 'orthodox'
     created_at = Column(DateTime, default=datetime.utcnow)

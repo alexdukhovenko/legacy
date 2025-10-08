@@ -243,7 +243,7 @@ async def chat_with_ai(
         
         # Получаем или создаем сессию для конкретной конфессии
         session = db.query(UserSession).filter(
-            UserSession.user_id == str(user.id),
+            UserSession.user_id == user.id,  # user.id уже Integer
             UserSession.confession == request.confession,
             UserSession.is_active == 1
         ).first()
