@@ -212,7 +212,7 @@ class SunniAgent(BaseConfessionAgent):
         # Добавляем хадисы
         for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
-            if score > 0.00001:  # Экстремально низкий порог для исламских агентов
+            if score > 0.000001:  # УЛЬТРА низкий порог для исламских агентов
                 results.append({
                     'type': 'hadith',
                     'content': {
@@ -232,6 +232,20 @@ class SunniAgent(BaseConfessionAgent):
         
         # Сортируем по релевантности
         results.sort(key=lambda x: x['similarity_score'], reverse=True)
+        
+        # Дополнительное логирование для диагностики SunniAgent
+        if len(results) == 0:
+            logger.warning(f"🚨 SunniAgent: НЕ НАЙДЕНО источников для вопроса: '{question}'")
+            logger.warning(f"🔍 Проверяем порог similarity_score: 0.000001")
+            # Показываем первые несколько результатов с их scores
+            all_results = []
+            for hadith in hadith_query.limit(5):
+                score = self._calculate_similarity_score(question, hadith.translation_ru or "")
+                all_results.append(f"Хадис {hadith.id}: score={score:.8f}")
+            logger.warning(f"📊 Первые 5 хадисов с scores: {all_results}")
+        else:
+            logger.info(f"✅ SunniAgent: Найдено {len(results)} источников с scores: {[f'{r[\"similarity_score\"]:.8f}' for r in results[:3]]}")
+        
         return results[:limit]
     
     def generate_response(self, question: str, relevant_texts: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -445,7 +459,7 @@ class ShiaAgent(BaseConfessionAgent):
         # Добавляем хадисы
         for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
-            if score > 0.00001:  # Экстремально низкий порог для исламских агентов
+            if score > 0.000001:  # УЛЬТРА низкий порог для исламских агентов
                 results.append({
                     'type': 'hadith',
                     'content': {
@@ -465,6 +479,20 @@ class ShiaAgent(BaseConfessionAgent):
         
         # Сортируем по релевантности
         results.sort(key=lambda x: x['similarity_score'], reverse=True)
+        
+        # Дополнительное логирование для диагностики ShiaAgent
+        if len(results) == 0:
+            logger.warning(f"🚨 ShiaAgent: НЕ НАЙДЕНО источников для вопроса: '{question}'")
+            logger.warning(f"🔍 Проверяем порог similarity_score: 0.000001")
+            # Показываем первые несколько результатов с их scores
+            all_results = []
+            for hadith in hadith_query.limit(5):
+                score = self._calculate_similarity_score(question, hadith.translation_ru or "")
+                all_results.append(f"Хадис {hadith.id}: score={score:.8f}")
+            logger.warning(f"📊 Первые 5 хадисов с scores: {all_results}")
+        else:
+            logger.info(f"✅ ShiaAgent: Найдено {len(results)} источников с scores: {[f'{r[\"similarity_score\"]:.8f}' for r in results[:3]]}")
+        
         return results[:limit]
     
     def generate_response(self, question: str, relevant_texts: List[Dict[str, Any]]) -> Dict[str, Any]:
