@@ -16,7 +16,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f5dc 0%, #f0e68c 25%, #daa520 50%, #b8860b 75%, #8b7355 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             color: #2c3e50;
             line-height: 1.6;
             overflow-x: hidden;
@@ -30,7 +30,7 @@
 
         /* Header */
         .header {
-            background: rgba(245, 245, 220, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem 0;
             position: fixed;
@@ -38,7 +38,7 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            border-bottom: 2px solid rgba(139, 115, 85, 0.3);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -51,7 +51,7 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #8b7355;
+            color: #2c3e50;
             text-decoration: none;
         }
 
@@ -68,7 +68,7 @@
         }
 
         .nav a:hover {
-            color: #8b7355;
+            color: #3498db;
         }
 
         .auth-buttons {
@@ -87,23 +87,23 @@
         }
 
         .btn-primary {
-            background: #8b7355;
+            background: #3498db;
             color: #ffffff;
         }
 
         .btn-primary:hover {
-            background: #6b5b47;
+            background: #2980b9;
             transform: translateY(-2px);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #8b7355;
-            border: 2px solid #8b7355;
+            color: #3498db;
+            border: 2px solid #3498db;
         }
 
         .btn-secondary:hover {
-            background: #8b7355;
+            background: #3498db;
             color: #ffffff;
         }
 
@@ -111,13 +111,13 @@
         .hero {
             padding: 8rem 0 4rem;
             text-align: center;
-            background: linear-gradient(135deg, rgba(139, 115, 85, 0.1) 0%, rgba(245, 245, 220, 0.8) 100%);
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(255, 255, 255, 0.8) 100%);
         }
 
         .hero h1 {
             font-size: 3.5rem;
             font-weight: 700;
-            color: #8b7355;
+            color: #2c3e50;
             margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
@@ -148,7 +148,7 @@
             text-align: center;
             font-size: 2.5rem;
             font-weight: 700;
-            color: #8b7355;
+            color: #2c3e50;
             margin-bottom: 3rem;
         }
 
@@ -180,7 +180,7 @@
         .feature-card h3 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #8b7355;
+            color: #2c3e50;
             margin-bottom: 1rem;
         }
 
@@ -209,7 +209,7 @@
         .stat-number {
             font-size: 3rem;
             font-weight: 700;
-            color: #8b7355;
+            color: #2c3e50;
             display: block;
         }
 
@@ -229,7 +229,7 @@
         .cta h2 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #8b7355;
+            color: #2c3e50;
             margin-bottom: 1rem;
         }
 
@@ -251,7 +251,7 @@
         }
 
         .footer p {
-            color: #8b7355;
+            color: #2c3e50;
         }
 
         /* Responsive */
@@ -306,9 +306,9 @@
             <div class="header-content">
                 <a href="#" class="logo">LEGACY M</a>
                 <nav class="nav">
-                    <a href="#features">Возможности</a>
-                    <a href="#about">О проекте</a>
-                    <a href="#contact">Контакты</a>
+                    <a href="/frontend/landing.html">Главная</a>
+                    <a href="/frontend/index.html">Чат</a>
+                    <a href="#settings">Настройки</a>
                 </nav>
                 <div class="auth-buttons">
                     <a href="/frontend/auth.html" class="btn btn-secondary">Войти</a>
@@ -322,7 +322,7 @@
     <section class="hero">
         <div class="container">
             <h1 class="fade-in-up">LEGACY M</h1>
-            <p class="fade-in-up-delay-1">Цифровая платформа духовного наставничества, объединяющая традиции ислама и православия через искусственный интеллект</p>
+            <p class="fade-in-up-delay-1">Цифровая платформа духовного общения, объединяющая традиции ислама и православия через искусственный интеллект</p>
             <div class="hero-buttons fade-in-up-delay-2">
                 <a href="/frontend/auth.html" class="btn btn-primary">Начать общение</a>
                 <a href="#features" class="btn btn-secondary">Узнать больше</a>
@@ -337,7 +337,7 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">🤖</div>
-                    <h3>ИИ-Наставники</h3>
+                    <h3>ИИ-Помощники</h3>
                     <p>Специализированные искусственные интеллекты для каждой конфессии: суннитский ислам, шиитский ислам и православие</p>
                 </div>
                 <div class="feature-card">
