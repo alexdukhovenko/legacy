@@ -165,41 +165,41 @@ class ProductionDataLoader:
             # Суннитские хадисы
             Hadith(
                 collection="Бухари",
-                number=1,
-                text_arabic="إنما الأعمال بالنيات",
-                text_russian="Поистине, дела (оцениваются) только по намерениям.",
+                hadith_number=1,
+                arabic_text="إنما الأعمال بالنيات",
+                translation_ru="Поистине, дела (оцениваются) только по намерениям.",
                 commentary="Важность намерения в исламе.",
                 confession='sunni'
             ),
             Hadith(
                 collection="Бухари",
-                number=2,
-                text_arabic="بني الإسلام على خمس",
-                text_russian="Ислам построен на пяти (столпах).",
+                hadith_number=2,
+                arabic_text="بني الإسلام على خمس",
+                translation_ru="Ислам построен на пяти (столпах).",
                 commentary="Пять столпов ислама.",
                 confession='sunni'
             ),
             Hadith(
                 collection="Муслим",
-                number=1,
-                text_arabic="الإيمان بضع وسبعون شعبة",
-                text_russian="Вера имеет более семидесяти ответвлений.",
+                hadith_number=1,
+                arabic_text="الإيمان بضع وسبعون شعبة",
+                translation_ru="Вера имеет более семидесяти ответвлений.",
                 commentary="Вера включает в себя множество аспектов.",
                 confession='sunni'
             ),
             Hadith(
                 collection="Бухари",
-                number=3,
-                text_arabic="الصلاة عمود الدين",
-                text_russian="Молитва - столп религии.",
+                hadith_number=3,
+                arabic_text="الصلاة عمود الدين",
+                translation_ru="Молитва - столп религии.",
                 commentary="Важность молитвы в исламе.",
                 confession='sunni'
             ),
             Hadith(
                 collection="Муслим",
-                number=2,
-                text_arabic="خيركم خيركم لأهله",
-                text_russian="Лучший из вас - тот, кто лучше всех относится к своей семье.",
+                hadith_number=2,
+                arabic_text="خيركم خيركم لأهله",
+                translation_ru="Лучший из вас - тот, кто лучше всех относится к своей семье.",
                 commentary="Важность хорошего отношения к семье.",
                 confession='sunni'
             ),
@@ -207,25 +207,25 @@ class ProductionDataLoader:
             # Шиитские хадисы
             Hadith(
                 collection="Аль-Кафи",
-                number=1,
-                text_arabic="عن أبي عبد الله عليه السلام قال: دعائم الكفر ثلاثة: الحرص والاستكبار والحسد",
-                text_russian="От Абу Абдуллаха (мир ему) передано: Столпов неверия три: алчность, высокомерие и зависть.",
+                hadith_number=1,
+                arabic_text="عن أبي عبد الله عليه السلام قال: دعائم الكفر ثلاثة: الحرص والاستكبار والحسد",
+                translation_ru="От Абу Абдуллаха (мир ему) передано: Столпов неверия три: алчность, высокомерие и зависть.",
                 commentary="Основы неверия в шиитском исламе.",
                 confession='shia'
             ),
             Hadith(
                 collection="Аль-Кафи",
-                number=2,
-                text_arabic="عن أبي جعفر عليه السلام قال: الإيمان معرفة بالقلب وإقرار باللسان وعمل بالأركان",
-                text_russian="От Абу Джафара (мир ему) передано: Вера - это познание сердцем, признание языком и действие органами.",
+                hadith_number=2,
+                arabic_text="عن أبي جعفر عليه السلام قال: الإيمان معرفة بالقلب وإقرار باللسان وعمل بالأركان",
+                translation_ru="От Абу Джафара (мир ему) передано: Вера - это познание сердцем, признание языком и действие органами.",
                 commentary="Определение веры в шиизме.",
                 confession='shia'
             ),
             Hadith(
                 collection="Аль-Кафи",
-                number=3,
-                text_arabic="عن أبي عبد الله عليه السلام قال: الصلاة قربان كل تقي",
-                text_russian="От Абу Абдуллаха (мир ему) передано: Молитва - жертвоприношение каждого благочестивого.",
+                hadith_number=3,
+                arabic_text="عن أبي عبد الله عليه السلام قال: الصلاة قربان كل تقي",
+                translation_ru="От Абу Абдуллаха (мир ему) передано: Молитва - жертвоприношение каждого благочестивого.",
                 commentary="Значение молитвы в шиизме.",
                 confession='shia'
             ),
@@ -235,7 +235,7 @@ class ProductionDataLoader:
             # Проверяем, не существует ли уже такой хадис
             existing = self.db.query(Hadith).filter(
                 Hadith.collection == hadith.collection,
-                Hadith.number == hadith.number,
+                Hadith.hadith_number == hadith.hadith_number,
                 Hadith.confession == hadith.confession
             ).first()
             

@@ -50,6 +50,7 @@ class AnthropicProvider(AIProvider):
     def __init__(self):
         try:
             import anthropic
+            # Используем новую версию API
             self.client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
             self.available = True
         except Exception as e:
