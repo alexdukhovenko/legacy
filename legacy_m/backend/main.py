@@ -73,7 +73,6 @@ class UserResponse(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str
-    user_id: str
     confession: str  # 'sunni', 'shia', 'orthodox'
 
 class ChatResponse(BaseModel):
@@ -199,30 +198,9 @@ async def read_root():
 async def create_or_get_user(request: UserRequest, db: Session = Depends(get_db)):
     """Создание или получение пользователя"""
     try:
-        if request.user_id:
-            # Проверяем, существует ли пользователь
-            user = db.query(User).filter(User.user_id == request.user_id).first()
-            if user:
-                user.last_activity = datetime.utcnow()
-                db.commit()
-                return UserResponse(user_id=request.user_id, created=False)
-            else:
-                # Создаем нового пользователя с указанным ID
-                user = User(user_id=request.user_id)
-                db.add(user)
-                db.commit()
-                
-                logger.info(f"✅ Создан новый пользователь с ID: {request.user_id}")
-                return UserResponse(user_id=request.user_id, created=True)
-        else:
-            # Создаем нового пользователя
-            user_id = str(uuid.uuid4())
-            user = User(user_id=user_id)
-            db.add(user)
-            db.commit()
-            
-            logger.info(f"✅ Создан новый пользователь: {user_id}")
-            return UserResponse(user_id=user_id, created=True)
+        # В новой системе аутентификации пользователи создаются через /api/auth/register
+        # Этот endpoint больше не используется
+        raise HTTPException(status_code=410, detail="Этот endpoint устарел. Используйте /api/auth/register")
         
     except HTTPException:
         raise
