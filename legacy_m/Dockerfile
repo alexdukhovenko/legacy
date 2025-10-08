@@ -25,7 +25,7 @@ RUN mkdir -p /app/logs
 EXPOSE 8000
 
 # Команда для запуска с инициализацией
-CMD ["python", "force_restart.py"]
+CMD ["python", "test_api_key.py"]
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
