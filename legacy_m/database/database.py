@@ -11,6 +11,12 @@ from .models import Base
 # Путь к базе данных
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./legacy_m.db")
 
+# ДИАГНОСТИКА ПЕРЕМЕННЫХ ОКРУЖЕНИЯ
+print(f"🔍 ДИАГНОСТИКА:")
+print(f"   RENDER env: {os.getenv('RENDER')}")
+print(f"   DATABASE_URL env: {os.getenv('DATABASE_URL', 'НЕ УСТАНОВЛЕН')[:50]}...")
+print(f"   DATABASE_URL final: {DATABASE_URL[:50]}...")
+
 # КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Принудительное использование PostgreSQL на Render
 if os.getenv("RENDER") or os.getenv("DATABASE_URL"):
     # На Render принудительно используем PostgreSQL
