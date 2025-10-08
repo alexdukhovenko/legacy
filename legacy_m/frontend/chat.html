@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEGACY M - Исламский ИИ-Наставник</title>
+    <title>Чат - LEGACY M</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,34 +16,56 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #2c1810 0%, #3d2817 25%, #4a2c1a 50%, #5d3a1f 75%, #6b4224 100%);
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%);
             color: #f4e4bc;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Header */
         .header {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(44, 24, 16, 0.95);
+            backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             border-bottom: 2px solid rgba(212, 175, 55, 0.3);
-            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            min-height: 60px;
+            width: 100%;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #d4af37;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            color: #f4e4bc;
+            margin: 0;
+            opacity: 0.8;
         }
 
         .back-button {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
             background: rgba(212, 175, 55, 0.8);
             color: #2c1810;
             border: none;
@@ -52,58 +74,51 @@
             cursor: pointer;
             font-weight: 500;
             transition: all 0.3s ease;
-            display: none;
         }
 
         .back-button:hover {
             background: rgba(212, 175, 55, 1);
-            transform: translateY(-50%) scale(1.05);
+            transform: scale(1.05);
         }
 
-        .header-title {
-            flex: 1;
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        .main-nav {
+        .confession-info {
             display: flex;
-            gap: 2rem;
-            margin: 0 2rem;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .nav-link {
-            color: #f4e4bc;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            color: #d4af37;
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .header h1 {
+        .confession-icon {
             font-size: 2rem;
+        }
+
+        .confession-details h3 {
             color: #d4af37;
-            font-weight: 700;
+            font-size: 1.2rem;
             margin: 0;
         }
 
-        .header p {
-            margin-top: 0.5rem;
+        .confession-details p {
+            color: #f4e4bc;
+            font-size: 0.9rem;
+            margin: 0;
             opacity: 0.8;
-            margin: 0;
         }
 
-        .auth-buttons {
+        .auth-section {
             display: flex;
-            gap: 10px;
-            flex-shrink: 0;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-name {
+            color: #f4e4bc;
+            font-weight: 500;
         }
 
         .auth-button {
@@ -112,133 +127,49 @@
             color: #2c1810;
             border: none;
             border-radius: 8px;
-            font-weight: 600;
             cursor: pointer;
+            font-weight: 500;
             transition: all 0.3s ease;
             text-decoration: none;
-            font-size: 14px;
+            display: inline-block;
         }
 
         .auth-button:hover {
-            background: #d4af37;
-            transform: translateY(-1px);
+            background: rgba(212, 175, 55, 1);
+            transform: scale(1.05);
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #f4e4bc;
-        }
-
-        .user-name {
-            font-weight: 500;
-        }
-
-        .confession-selector {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 1rem 2rem;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-            display: none;
-        }
-
-        .confession-selector.show {
-            display: block;
-        }
-
-        .confession-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .confession-card {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 15px;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .confession-card:hover {
-            border-color: #d4af37;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
-        }
-
-        .confession-stats {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .confession-stats span {
-            background: rgba(212, 175, 55, 0.2);
-            color: #d4af37;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .confession-card.selected {
-            border-color: #d4af37;
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .confession-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .confession-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #d4af37;
-            margin-bottom: 0.5rem;
-        }
-
-        .confession-description {
-            opacity: 0.8;
-            line-height: 1.5;
-        }
-
-        .main-content {
+        /* Chat Container */
+        .chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 2rem;
+            overflow: hidden;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 2rem 0;
-            display: none;
-        }
-
-        .chat-messages.show {
-            display: block;
-        }
-
-        .message {
-            margin-bottom: 1.5rem;
+            padding: 2rem;
             display: flex;
-            align-items: flex-start;
+            flex-direction: column;
             gap: 1rem;
         }
 
+        .message {
+            display: flex;
+            gap: 1rem;
+            max-width: 80%;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
         .message.user-message {
+            align-self: flex-end;
             flex-direction: row-reverse;
+        }
+
+        .message.ai-message {
+            align-self: flex-start;
         }
 
         .message-avatar {
@@ -253,12 +184,12 @@
         }
 
         .user-message .message-avatar {
-            background: rgba(212, 175, 55, 0.8);
+            background: #d4af37;
             color: #2c1810;
         }
 
         .ai-message .message-avatar {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(212, 175, 55, 0.2);
             color: #d4af37;
         }
 
@@ -266,13 +197,13 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 1rem 1.5rem;
             border-radius: 15px;
-            max-width: 70%;
+            border: 1px solid rgba(212, 175, 55, 0.2);
             line-height: 1.6;
         }
 
         .user-message .message-content {
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
         }
 
         .ai-message .message-content {
@@ -290,51 +221,48 @@
             background: rgba(212, 175, 55, 0.2);
             color: #d4af37;
             padding: 0.25rem 0.75rem;
-            border-radius: 20px;
+            border-radius: 12px;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             margin: 0.25rem 0.25rem 0.25rem 0;
             transition: all 0.3s ease;
         }
 
         .source-link:hover {
-            background: rgba(212, 175, 55, 0.4);
-            transform: translateY(-1px);
+            background: rgba(212, 175, 55, 0.3);
+            transform: scale(1.05);
         }
 
+        /* Chat Input */
         .chat-input-container {
-            padding: 1rem 0 2rem;
-            display: none;
-        }
-
-        .chat-input-container.show {
-            display: block;
+            padding: 1rem 2rem;
+            background: rgba(44, 24, 16, 0.8);
+            border-top: 2px solid rgba(212, 175, 55, 0.3);
         }
 
         .chat-input-wrapper {
             display: flex;
             gap: 1rem;
-            align-items: flex-end;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .chat-input {
             flex: 1;
             background: rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 15px;
+            border-radius: 25px;
             padding: 1rem 1.5rem;
             color: #f4e4bc;
             font-size: 1rem;
-            resize: none;
-            min-height: 50px;
-            max-height: 120px;
             font-family: inherit;
+            transition: all 0.3s ease;
         }
 
         .chat-input:focus {
             outline: none;
             border-color: #d4af37;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
         }
 
         .chat-input::placeholder {
@@ -342,32 +270,34 @@
         }
 
         .send-button {
-            background: rgba(212, 175, 55, 0.8);
+            background: #d4af37;
             color: #2c1810;
             border: none;
-            border-radius: 15px;
-            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            min-width: 120px;
         }
 
         .send-button:hover {
-            background: #d4af37;
-            transform: translateY(-2px);
+            background: #b8941f;
+            transform: scale(1.05);
         }
 
         .send-button:disabled {
-            opacity: 0.6;
+            background: rgba(212, 175, 55, 0.3);
             cursor: not-allowed;
             transform: none;
         }
 
+        /* Loading */
         .loading {
             display: none;
             text-align: center;
-            padding: 2rem;
+            padding: 1rem;
             color: #d4af37;
         }
 
@@ -375,23 +305,10 @@
             display: block;
         }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(212, 175, 55, 0.3);
-            border-radius: 50%;
-            border-top-color: #d4af37;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        /* Welcome Message */
         .welcome-message {
             text-align: center;
-            padding: 3rem 2rem;
+            padding: 2rem;
             color: #f4e4bc;
         }
 
@@ -404,87 +321,101 @@
         .welcome-message p {
             font-size: 1.1rem;
             line-height: 1.6;
-            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .welcome-message a {
-            color: #d4af37;
-            text-decoration: none;
-            font-weight: 600;
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .welcome-message a:hover {
-            text-decoration: underline;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .chat-messages {
+                padding: 1rem;
+            }
+            
+            .chat-input-container {
+                padding: 1rem;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <button id="back-button" class="back-button" onclick="goBackToConfessionSelector()">← Назад к выбору</button>
-        <div class="header-content">
-            <div class="header-title">
-                <h1>LEGACY M</h1>
-                <p>Цифровая платформа духовного наставничества</p>
-            </div>
-            <nav class="main-nav">
-                <a href="/frontend/landing.html" class="nav-link">Главная</a>
-                <a href="#" class="nav-link active" onclick="showConfessionSelector()">Чат</a>
-                <a href="#" class="nav-link" onclick="showSettings()">Настройки</a>
-            </nav>
-            <div id="auth-section">
-                <div id="auth-buttons" class="auth-buttons" style="display: none;">
-                    <a href="/frontend/auth.html" class="auth-button">Войти</a>
-                    <a href="/frontend/auth.html" class="auth-button">Регистрация</a>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <button class="back-button" onclick="goBack()">← Назад</button>
+                
+                <div class="header-title">
+                    <h1>LEGACY M</h1>
+                    <p>Цифровая платформа духовного наставничества</p>
                 </div>
-                <div id="user-info" class="user-info" style="display: none;">
-                    <span class="user-name" id="user-name"></span>
-                    <button class="auth-button" onclick="logout()">Выйти</button>
+                
+                <div class="confession-info" id="confessionInfo" style="display: none;">
+                    <div class="confession-icon" id="confessionIcon"></div>
+                    <div class="confession-details">
+                        <h3 id="confessionTitle"></h3>
+                        <p id="confessionDescription"></p>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="confession-selector" id="confessionSelector">
-        <div class="confession-grid">
-            <div class="confession-card" onclick="selectConfession('sunni')">
-                <div class="confession-icon">🕌</div>
-                <div class="confession-title">Суннизм</div>
-                <div class="confession-description">Исламский наставник суннитской традиции</div>
-                <div class="confession-stats">
-                    <span>📖 Коран</span>
-                    <span>📜 Хадисы</span>
-                </div>
-            </div>
-            <div class="confession-card" onclick="selectConfession('shia')">
-                <div class="confession-icon">🕋</div>
-                <div class="confession-title">Шиизм</div>
-                <div class="confession-description">Исламский наставник шиитской традиции</div>
-                <div class="confession-stats">
-                    <span>📖 Коран</span>
-                    <span>📜 Аль-Кафи</span>
-                </div>
-            </div>
-            <div class="confession-card" onclick="selectConfession('orthodox')">
-                <div class="confession-icon">⛪</div>
-                <div class="confession-title">Православие</div>
-                <div class="confession-description">Христианский наставник православной традиции</div>
-                <div class="confession-stats">
-                    <span>📖 Библия</span>
-                    <span>📜 Святоотеческие труды</span>
+                
+                <div class="auth-section">
+                    <div id="auth-buttons" class="auth-buttons" style="display: none;">
+                        <a href="/frontend/auth.html" class="auth-button">Войти</a>
+                        <a href="/frontend/auth.html" class="auth-button">Регистрация</a>
+                    </div>
+                    <div id="user-info" class="user-info" style="display: none;">
+                        <span class="user-name" id="user-name"></span>
+                        <button class="auth-button" onclick="logout()">Выйти</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="main-content">
-        <div id="welcomeMessage" class="welcome-message">
-            <h2>Добро пожаловать в LEGACY M!</h2>
-            <p>Выберите конфессию для начала общения с ИИ-наставником</p>
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div id="welcomeMessage" class="welcome-message">
+                <h2>Добро пожаловать в чат!</h2>
+                <p>Выберите конфессию для начала общения с ИИ-наставником</p>
+            </div>
+            
+            <div id="chatMessages" class="chat-messages" style="display: none;">
+                <!-- Сообщения будут добавляться здесь -->
+            </div>
+            
+            <div class="chat-input-container" id="chatInputContainer" style="display: none;">
+                <div class="chat-input-wrapper">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Задайте вопрос ИИ-наставнику..." autocomplete="off">
+                    <button id="sendButton" class="send-button" onclick="sendMessage()">Отправить</button>
+                </div>
+                <div id="loading" class="loading">ИИ-наставник печатает...</div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Глобальные переменные
         let currentUser = null;
         let currentConfession = null;
 
@@ -492,7 +423,22 @@
         window.addEventListener('load', async () => {
             const isAuthenticated = await checkAuth();
             if (isAuthenticated) {
-                showConfessionSelector();
+                // Получаем конфессию из URL параметров
+                const urlParams = new URLSearchParams(window.location.search);
+                const confession = urlParams.get('confession');
+                
+                if (confession && ['sunni', 'shia', 'orthodox'].includes(confession)) {
+                    startChat(confession);
+                } else {
+                    // Если нет конфессии, показываем сообщение
+                    document.getElementById('welcomeMessage').innerHTML = `
+                        <h2>Выберите конфессию</h2>
+                        <p>Для начала общения необходимо выбрать конфессию</p>
+                        <div style="margin-top: 2rem;">
+                            <a href="/frontend/index.html" class="auth-button">Вернуться к выбору</a>
+                        </div>
+                    `;
+                }
             }
         });
 
@@ -546,34 +492,12 @@
         function showAuthButtons() {
             document.getElementById('auth-buttons').style.display = 'flex';
             document.getElementById('user-info').style.display = 'none';
-            document.getElementById('welcomeMessage').style.display = 'block';
-            document.getElementById('confessionSelector').classList.remove('show');
-            document.getElementById('chatMessages').classList.remove('show');
-            document.getElementById('chatInputContainer').classList.remove('show');
         }
 
         function showUserInfo(userData) {
             document.getElementById('auth-buttons').style.display = 'none';
             document.getElementById('user-info').style.display = 'flex';
             document.getElementById('user-name').textContent = userData.name || userData.username;
-        }
-
-        function showConfessionSelector() {
-            document.getElementById('welcomeMessage').style.display = 'none';
-            document.getElementById('confessionSelector').classList.add('show');
-            document.getElementById('back-button').style.display = 'none';
-        }
-
-        // Вернуться к выбору конфессии
-        function goBackToConfessionSelector() {
-            showConfessionSelector();
-            currentConfession = null;
-        }
-
-        // Показать настройки
-        function showSettings() {
-            // Пока что просто показываем alert
-            alert('Настройки будут доступны в следующей версии!');
         }
 
         async function logout() {
@@ -592,19 +516,48 @@
             } finally {
                 removeAuthToken();
                 showAuthButtons();
-                currentUser = null;
-                currentConfession = null;
+                window.location.href = '/frontend/landing.html';
             }
         }
 
-        // ===== ВЫБОР КОНФЕССИИ =====
-
-        function selectConfession(confession) {
-            // Перенаправляем на отдельную страницу чата
-            window.location.href = `/frontend/chat.html?confession=${confession}`;
-        }
-
         // ===== ЧАТ =====
+
+        function startChat(confession) {
+            currentConfession = confession;
+            
+            // Настраиваем информацию о конфессии
+            const confessionData = {
+                sunni: {
+                    icon: '🕌',
+                    title: 'Суннизм',
+                    description: 'Исламский наставник суннитской традиции'
+                },
+                shia: {
+                    icon: '🕋',
+                    title: 'Шиизм',
+                    description: 'Исламский наставник шиитской традиции'
+                },
+                orthodox: {
+                    icon: '⛪',
+                    title: 'Православие',
+                    description: 'Христианский наставник православной традиции'
+                }
+            };
+
+            const data = confessionData[confession];
+            document.getElementById('confessionIcon').textContent = data.icon;
+            document.getElementById('confessionTitle').textContent = data.title;
+            document.getElementById('confessionDescription').textContent = data.description;
+            document.getElementById('confessionInfo').style.display = 'flex';
+
+            // Показываем чат
+            document.getElementById('welcomeMessage').style.display = 'none';
+            document.getElementById('chatMessages').style.display = 'flex';
+            document.getElementById('chatInputContainer').style.display = 'block';
+
+            // Загружаем историю чата
+            loadChatHistory();
+        }
 
         async function loadChatHistory() {
             if (!currentUser || !currentConfession) return;
@@ -615,7 +568,7 @@
                         'Authorization': `Bearer ${getAuthToken()}`
                     }
                 });
-                
+
                 if (response.ok) {
                     const data = await response.json();
                     displayChatHistory(data.messages);
@@ -640,7 +593,6 @@
             messageDiv.className = `message ${type}-message`;
             
             const avatar = type === 'user' ? '👤' : '🤖';
-            const messageClass = type === 'user' ? 'user-message' : 'ai-message';
             
             let sourcesHtml = '';
             if (sources && sources.length > 0) {
@@ -668,21 +620,20 @@
         async function sendMessage() {
             const token = getAuthToken();
             if (!token) {
-                alert('Пожалуйста, войдите в систему для использования чата');
-                window.location.href = '/frontend/auth.html';
+                alert('Необходимо войти в систему');
                 return;
             }
 
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             
-            if (!message || !currentUser || !currentConfession) return;
+            if (!message) return;
 
             // Добавляем сообщение пользователя
             addMessage(message, 'user');
             input.value = '';
-            input.style.height = 'auto';
-            
+
+            // Показываем загрузку
             showLoading();
 
             try {
@@ -694,14 +645,12 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        user_id: 'authenticated', // Заглушка, реальный ID берется из токена
                         confession: currentConfession
                     })
                 });
 
-                const data = await response.json();
-                
                 if (response.ok) {
+                    const data = await response.json();
                     addMessage(data.response, 'ai', data.sources);
                 } else {
                     if (response.status === 401) {
@@ -714,8 +663,8 @@
                     }
                 }
             } catch (error) {
-                console.error('Chat error:', error);
-                addMessage('Ошибка соединения с сервером', 'ai');
+                console.error('Error sending message:', error);
+                addMessage('Извините, произошла ошибка соединения.', 'ai');
             } finally {
                 hideLoading();
             }
@@ -723,10 +672,12 @@
 
         function showLoading() {
             document.getElementById('loading').classList.add('show');
+            document.getElementById('sendButton').disabled = true;
         }
 
         function hideLoading() {
             document.getElementById('loading').classList.remove('show');
+            document.getElementById('sendButton').disabled = false;
         }
 
         function getSourceTypeName(type) {
@@ -759,8 +710,11 @@
         }
 
         function showSource(type, id) {
-            // TODO: Реализовать показ источника
             alert(`Источник: ${getSourceTypeName(type)} #${id}`);
+        }
+
+        function goBack() {
+            window.location.href = '/frontend/index.html';
         }
 
         // Обработчики событий
@@ -769,11 +723,6 @@
                 e.preventDefault();
                 sendMessage();
             }
-        });
-
-        document.getElementById('chatInput').addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
     </script>
 </body>

@@ -27,8 +27,12 @@ def load_simple_data():
         logger.info("🚀 Начинаем загрузку простых данных...")
         
         # Проверяем, есть ли уже данные
-        if db.query(QuranVerse).count() > 0:
-            logger.info("✅ Данные уже загружены")
+        quran_count = db.query(QuranVerse).count()
+        hadith_count = db.query(Hadith).count()
+        orthodox_count = db.query(OrthodoxText).count()
+        
+        if quran_count > 0 and hadith_count > 0 and orthodox_count > 0:
+            logger.info(f"✅ Данные уже загружены: {quran_count} аятов, {hadith_count} хадисов, {orthodox_count} православных текстов")
             return
         
         # Загружаем Коран
@@ -87,6 +91,8 @@ def load_simple_data():
             )
         ]
         db.add_all(quran_verses)
+        db.flush()  # Принудительно сохраняем в базу
+        logger.info(f"✅ Добавлено {len(quran_verses)} аятов Корана")
         
         # Загружаем хадисы
         logger.info("📜 Загружаем хадисы...")
@@ -143,6 +149,8 @@ def load_simple_data():
             )
         ]
         db.add_all(hadiths)
+        db.flush()  # Принудительно сохраняем в базу
+        logger.info(f"✅ Добавлено {len(hadiths)} хадисов")
         
         # Загружаем православные тексты
         logger.info("⛪ Загружаем православные тексты...")
@@ -183,6 +191,8 @@ def load_simple_data():
             )
         ]
         db.add_all(orthodox_texts)
+        db.flush()  # Принудительно сохраняем в базу
+        logger.info(f"✅ Добавлено {len(orthodox_texts)} православных текстов")
         
         db.commit()
         logger.info(f"✅ Загружено: {len(quran_verses)} аятов, {len(hadiths)} хадисов, {len(orthodox_texts)} православных текстов")

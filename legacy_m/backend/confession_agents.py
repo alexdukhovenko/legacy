@@ -161,6 +161,8 @@ class SunniAgent(BaseConfessionAgent):
     
     def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Поиск в суннитских источниках"""
+        logger.info(f"🔍 SunniAgent: Ищем релевантные тексты для вопроса: '{question}'")
+        
         # Поиск в Коране (только суннитские источники)
         quran_query = self.db.query(QuranVerse).filter(
             or_(
@@ -169,10 +171,16 @@ class SunniAgent(BaseConfessionAgent):
             )
         )
         
+        quran_count = quran_query.count()
+        logger.info(f"📖 SunniAgent: Найдено {quran_count} аятов Корана для суннитов")
+        
         # Поиск в хадисах (только суннитские)
         hadith_query = self.db.query(Hadith).filter(
             Hadith.confession == 'sunni'
         )
+        
+        hadith_count = hadith_query.count()
+        logger.info(f"📜 SunniAgent: Найдено {hadith_count} хадисов для суннитов")
         
         # Поиск в комментариях (только суннитские)
         commentary_query = self.db.query(Commentary).filter(
@@ -386,6 +394,8 @@ class ShiaAgent(BaseConfessionAgent):
     
     def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
         """Поиск в шиитских источниках"""
+        logger.info(f"🔍 ShiaAgent: Ищем релевантные тексты для вопроса: '{question}'")
+        
         # Поиск в Коране (только шиитские источники)
         quran_query = self.db.query(QuranVerse).filter(
             or_(
@@ -394,10 +404,16 @@ class ShiaAgent(BaseConfessionAgent):
             )
         )
         
+        quran_count = quran_query.count()
+        logger.info(f"📖 ShiaAgent: Найдено {quran_count} аятов Корана для шиитов")
+        
         # Поиск в хадисах (только шиитские)
         hadith_query = self.db.query(Hadith).filter(
             Hadith.confession == 'shia'
         )
+        
+        hadith_count = hadith_query.count()
+        logger.info(f"📜 ShiaAgent: Найдено {hadith_count} хадисов для шиитов")
         
         # Поиск в комментариях (только шиитские)
         commentary_query = self.db.query(Commentary).filter(
