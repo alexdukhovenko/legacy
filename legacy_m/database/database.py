@@ -12,14 +12,14 @@ from .models import Base
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./legacy_m.db")
 
 # КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Принудительное использование PostgreSQL на Render
-if os.getenv("RENDER"):
+if os.getenv("RENDER") or os.getenv("DATABASE_URL"):
     # На Render принудительно используем PostgreSQL
     if not DATABASE_URL or "sqlite" in DATABASE_URL:
         print("🚨 КРИТИЧЕСКАЯ ОШИБКА: На Render должна использоваться PostgreSQL!")
         print("🔧 Проверьте переменную окружения DATABASE_URL")
-        # Используем fallback PostgreSQL URL для Render
-        DATABASE_URL = "postgresql://legacy_user:legacy_pass@localhost:5432/legacy_db"
-        print(f"⚠️ Используем fallback PostgreSQL: {DATABASE_URL[:20]}...")
+        print("🔧 Убедитесь, что PostgreSQL база данных создана на Render")
+        # НЕ используем fallback - это вызовет ошибку
+        raise Exception("DATABASE_URL не настроен для PostgreSQL на Render!")
     else:
         print(f"✅ Используем PostgreSQL на Render: {DATABASE_URL[:20]}...")
         # Убеждаемся, что используем правильный формат
@@ -31,12 +31,20 @@ else:
     print(f"💻 Локальная разработка, используем SQLite: {DATABASE_URL}")
 
 # Создание движка базы данных
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {},
-    poolclass=StaticPool if "sqlite" in DATABASE_URL else None,
-    echo=False  # Установите True для отладки SQL запросов
-)
+try:
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {},
+        poolclass=StaticPool if "sqlite" in DATABASE_URL else None,
+        echo=False,  # Установите True для отладки SQL запросов
+        pool_pre_ping=True,  # Проверяем соединение перед использованием
+        pool_recycle=300,    # Переподключаемся каждые 5 минут
+    )
+    print(f"✅ Движок базы данных создан успешно")
+except Exception as e:
+    print(f"🚨 ОШИБКА создания движка базы данных: {e}")
+    print(f"🔧 DATABASE_URL: {DATABASE_URL[:50]}...")
+    raise
 
 # Создание фабрики сессий
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
