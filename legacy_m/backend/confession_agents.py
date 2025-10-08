@@ -212,7 +212,7 @@ class SunniAgent(BaseConfessionAgent):
         # Добавляем хадисы
         for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
-            if score > 0.0001:  # Очень низкий порог для исламских агентов
+            if score > 0.00001:  # Экстремально низкий порог для исламских агентов
                 results.append({
                     'type': 'hadith',
                     'content': {
@@ -445,7 +445,7 @@ class ShiaAgent(BaseConfessionAgent):
         # Добавляем хадисы
         for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
-            if score > 0.0001:  # Очень низкий порог для исламских агентов
+            if score > 0.00001:  # Экстремально низкий порог для исламских агентов
                 results.append({
                     'type': 'hadith',
                     'content': {
@@ -470,6 +470,7 @@ class ShiaAgent(BaseConfessionAgent):
     def generate_response(self, question: str, relevant_texts: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Генерация ответа с перепроверкой (аналогично SunniAgent)"""
         if not relevant_texts:
+            logger.warning(f"🚨 ShiaAgent: generate_response получил 0 источников для вопроса: '{question}'")
             return {
                 'response': 'Извините, я не нашел релевантной информации в шиитских источниках для ответа на ваш вопрос.',
                 'sources': [],

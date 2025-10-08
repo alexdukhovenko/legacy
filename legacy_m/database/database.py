@@ -11,15 +11,24 @@ from .models import Base
 # Путь к базе данных
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./legacy_m.db")
 
-# Проверяем DATABASE_URL
-if DATABASE_URL and ("postgresql://" in DATABASE_URL or "postgres://" in DATABASE_URL):
-    print(f"✅ Используем PostgreSQL: {DATABASE_URL[:20]}...")
-    # Убеждаемся, что используем правильный формат
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-        print(f"✅ Исправлен формат URL: {DATABASE_URL[:20]}...")
+# КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Принудительное использование PostgreSQL на Render
+if os.getenv("RENDER"):
+    # На Render принудительно используем PostgreSQL
+    if not DATABASE_URL or "sqlite" in DATABASE_URL:
+        print("🚨 КРИТИЧЕСКАЯ ОШИБКА: На Render должна использоваться PostgreSQL!")
+        print("🔧 Проверьте переменную окружения DATABASE_URL")
+        # Используем fallback PostgreSQL URL для Render
+        DATABASE_URL = "postgresql://legacy_user:legacy_pass@localhost:5432/legacy_db"
+        print(f"⚠️ Используем fallback PostgreSQL: {DATABASE_URL[:20]}...")
+    else:
+        print(f"✅ Используем PostgreSQL на Render: {DATABASE_URL[:20]}...")
+        # Убеждаемся, что используем правильный формат
+        if DATABASE_URL.startswith("postgres://"):
+            DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+            print(f"✅ Исправлен формат URL: {DATABASE_URL[:20]}...")
 else:
-    print(f"⚠️ Используем SQLite: {DATABASE_URL}")
+    # Локальная разработка - используем SQLite
+    print(f"💻 Локальная разработка, используем SQLite: {DATABASE_URL}")
 
 # Создание движка базы данных
 engine = create_engine(
