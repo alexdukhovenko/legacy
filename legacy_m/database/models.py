@@ -154,6 +154,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(100), unique=True, nullable=False, index=True)  # Уникальный логин
     email = Column(String(255), unique=True, nullable=True, index=True)  # Email (опционально)
+    phone = Column(String(20), unique=True, nullable=True, index=True)  # Номер телефона (опционально)
     password_hash = Column(String(255), nullable=False)  # Хеш пароля
     name = Column(String(255), nullable=True)  # Имя пользователя (опционально)
     confession = Column(String(50), nullable=True, index=True)  # Конфессия: 'sunni', 'shia', 'orthodox', null

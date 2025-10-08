@@ -76,7 +76,7 @@ class AuthSystem:
             logger.warning("Недействительный JWT токен")
             return None
     
-    def register_user(self, username: str, password: str, email: str = None, name: str = None) -> Dict[str, Any]:
+    def register_user(self, username: str, password: str, email: str = None, name: str = None, phone: str = None) -> Dict[str, Any]:
         """Регистрация нового пользователя"""
         try:
             # Проверяем, существует ли пользователь
@@ -102,6 +102,7 @@ class AuthSystem:
             user = User(
                 username=username,
                 email=email,
+                phone=phone,
                 password_hash=password_hash,
                 name=name,
                 is_verified=0,
@@ -276,8 +277,11 @@ class AuthSystem:
     def _log_user_action(self, user_id: Optional[int], action: str, details: str, ip_address: str = None, user_agent: str = None):
         """Логирование действий пользователя"""
         try:
+            # Для неудачных попыток входа используем user_id=0
+            effective_user_id = user_id if user_id is not None else 0
+            
             log_entry = UserLog(
-                user_id=user_id,
+                user_id=effective_user_id,
                 action=action,
                 details=details,
                 ip_address=ip_address,
@@ -289,6 +293,7 @@ class AuthSystem:
             
         except Exception as e:
             logger.error(f"❌ Ошибка логирования: {e}")
+            self.db.rollback()
     
     def create_user_session(self, user_id: int, confession: str) -> str:
         """Создание новой сессии пользователя"""

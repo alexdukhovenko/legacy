@@ -111,6 +111,13 @@
             box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
 
+        .form-hint {
+            display: block;
+            font-size: 0.8rem;
+            color: #8b7355;
+            margin-top: 4px;
+        }
+
         .form-group input::placeholder {
             color: rgba(244, 228, 188, 0.5);
         }
@@ -224,6 +231,11 @@
             <div class="form-group">
                 <label for="register-email">Email (опционально)</label>
                 <input type="email" id="register-email" placeholder="Введите email">
+            </div>
+            <div class="form-group">
+                <label for="register-phone">Номер телефона (опционально)</label>
+                <input type="tel" id="register-phone" placeholder="+7 (999) 123-45-67" pattern="\+7[0-9]{10}">
+                <small class="form-hint">Номер должен начинаться с +7</small>
             </div>
             <div class="form-group">
                 <label for="register-name">Имя (опционально)</label>
@@ -369,6 +381,7 @@
             
             const username = document.getElementById('register-username').value;
             const email = document.getElementById('register-email').value;
+            const phone = document.getElementById('register-phone').value;
             const name = document.getElementById('register-name').value;
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('register-confirm-password').value;
@@ -392,6 +405,12 @@
                 showError('Пароли не совпадают');
                 return;
             }
+
+            // Валидация номера телефона (если указан)
+            if (phone && !phone.match(/^\+7[0-9]{10}$/)) {
+                showError('Номер телефона должен начинаться с +7 и содержать 10 цифр');
+                return;
+            }
             
             setLoading('register', true);
             hideMessages();
@@ -405,6 +424,7 @@
                     body: JSON.stringify({
                         username: username,
                         email: email || null,
+                        phone: phone || null,
                         name: name || null,
                         password: password
                     })

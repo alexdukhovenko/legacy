@@ -39,6 +39,27 @@
             min-height: 60px;
         }
 
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(212, 175, 55, 0.8);
+            color: #2c1810;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .back-button:hover {
+            background: rgba(212, 175, 55, 1);
+            transform: translateY(-50%) scale(1.05);
+        }
+
         .header-title {
             flex: 1;
             text-align: center;
@@ -361,6 +382,7 @@
 </head>
 <body>
     <div class="header">
+        <button id="back-button" class="back-button" onclick="goBackToConfessionSelector()">← Назад к выбору</button>
         <div class="header-content">
             <div class="header-title">
                 <h1>LEGACY M</h1>
@@ -504,6 +526,13 @@
         function showConfessionSelector() {
             document.getElementById('welcomeMessage').style.display = 'none';
             document.getElementById('confessionSelector').classList.add('show');
+            document.getElementById('back-button').style.display = 'none';
+        }
+
+        // Вернуться к выбору конфессии
+        function goBackToConfessionSelector() {
+            showConfessionSelector();
+            currentConfession = null;
         }
 
         async function logout() {
@@ -542,6 +571,7 @@
             document.getElementById('confessionSelector').classList.remove('show');
             document.getElementById('chatMessages').classList.add('show');
             document.getElementById('chatInputContainer').classList.add('show');
+            document.getElementById('back-button').style.display = 'block';
             
             // Загружаем историю чата
             loadChatHistory();

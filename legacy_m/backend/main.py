@@ -292,8 +292,9 @@ async def chat_with_ai(
         )
         db.add(ai_message)
         
-        # Обновляем активность сессии
-        session.last_activity = datetime.utcnow()
+        # Обновляем активность сессии (если она существует)
+        if session:
+            session.last_activity = datetime.utcnow()
         user.last_activity = datetime.utcnow()
         
         db.commit()
@@ -323,13 +324,13 @@ async def get_user_chat_history(user_id: str, confession: str, db: Session = Dep
     """Получение истории чата пользователя с конкретным агентом"""
     try:
         # Проверяем, существует ли пользователь
-        user = db.query(User).filter(User.user_id == user_id).first()
+        user = db.query(User).filter(User.id == int(user_id)).first()
         if not user:
             raise HTTPException(status_code=404, detail="Пользователь не найден")
         
         # Получаем сессию для конкретной конфессии
         session = db.query(UserSession).filter(
-            UserSession.user_id == user_id,
+            UserSession.user_id == user.id,
             UserSession.confession == confession,
             UserSession.is_active == 1
         ).first()
@@ -368,13 +369,13 @@ async def get_user_sessions(user_id: str, db: Session = Depends(get_db)):
     """Получение всех активных сессий пользователя"""
     try:
         # Проверяем, существует ли пользователь
-        user = db.query(User).filter(User.user_id == user_id).first()
+        user = db.query(User).filter(User.id == int(user_id)).first()
         if not user:
             raise HTTPException(status_code=404, detail="Пользователь не найден")
         
         # Получаем все активные сессии пользователя
         sessions = db.query(UserSession).filter(
-            UserSession.user_id == user_id,
+            UserSession.user_id == user.id,
             UserSession.is_active == 1
         ).order_by(UserSession.last_activity.desc()).all()
         
@@ -402,18 +403,18 @@ async def get_user_info(user_id: str, db: Session = Depends(get_db)):
     """Получение информации о пользователе"""
     try:
         # Проверяем, существует ли пользователь
-        user = db.query(User).filter(User.user_id == user_id).first()
+        user = db.query(User).filter(User.id == int(user_id)).first()
         if not user:
             raise HTTPException(status_code=404, detail="Пользователь не найден")
         
         # Получаем количество активных сессий
         active_sessions = db.query(UserSession).filter(
-            UserSession.user_id == user_id,
+            UserSession.user_id == user.id,
             UserSession.is_active == 1
         ).count()
         
         return {
-            "user_id": user.user_id,
+            "user_id": str(user.id),
             "name": user.name,
             "confession": user.confession,
             "created_at": user.created_at.isoformat(),

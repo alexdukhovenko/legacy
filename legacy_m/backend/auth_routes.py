@@ -25,6 +25,7 @@ class RegisterRequest(BaseModel):
     username: str
     password: str
     email: str = None
+    phone: str = None
     name: str = None
     
     class Config:
@@ -49,6 +50,7 @@ class UserResponse(BaseModel):
     username: str
     name: str = None
     email: str = None
+    phone: str = None
     confession: str = None
     is_verified: bool
     created_at: str
@@ -89,6 +91,7 @@ async def register_user(
             username=request.username,
             password=request.password,
             email=request.email,
+            phone=request.phone,
             name=request.name
         )
         
@@ -210,6 +213,7 @@ async def get_current_user_info(
             username=current_user.username,
             name=current_user.name or "",
             email=current_user.email or "",
+            phone=current_user.phone or "",
             confession=current_user.confession or "",
             is_verified=bool(current_user.is_verified),
             created_at=current_user.created_at.isoformat(),
