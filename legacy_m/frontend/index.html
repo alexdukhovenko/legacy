@@ -66,6 +66,27 @@
             padding: 0 20px;
         }
 
+        .main-nav {
+            display: flex;
+            gap: 2rem;
+            margin: 0 2rem;
+        }
+
+        .nav-link {
+            color: #f4e4bc;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
         .header h1 {
             font-size: 2rem;
             color: #d4af37;
@@ -147,6 +168,23 @@
             border-color: #d4af37;
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .confession-stats {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .confession-stats span {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
         .confession-card.selected {
@@ -388,6 +426,11 @@
                 <h1>LEGACY M</h1>
                 <p>Цифровая платформа духовного наставничества</p>
             </div>
+            <nav class="main-nav">
+                <a href="/frontend/landing.html" class="nav-link">Главная</a>
+                <a href="#" class="nav-link active" onclick="showConfessionSelector()">Чат</a>
+                <a href="#" class="nav-link" onclick="showSettings()">Настройки</a>
+            </nav>
             <div id="auth-section">
                 <div id="auth-buttons" class="auth-buttons" style="display: none;">
                     <a href="/frontend/auth.html" class="auth-button">Войти</a>
@@ -407,16 +450,28 @@
                 <div class="confession-icon">🕌</div>
                 <div class="confession-title">Суннизм</div>
                 <div class="confession-description">Исламский наставник суннитской традиции</div>
+                <div class="confession-stats">
+                    <span>📖 Коран</span>
+                    <span>📜 Хадисы</span>
+                </div>
             </div>
             <div class="confession-card" onclick="selectConfession('shia')">
                 <div class="confession-icon">🕋</div>
                 <div class="confession-title">Шиизм</div>
                 <div class="confession-description">Исламский наставник шиитской традиции</div>
+                <div class="confession-stats">
+                    <span>📖 Коран</span>
+                    <span>📜 Аль-Кафи</span>
+                </div>
             </div>
             <div class="confession-card" onclick="selectConfession('orthodox')">
                 <div class="confession-icon">⛪</div>
                 <div class="confession-title">Православие</div>
                 <div class="confession-description">Христианский наставник православной традиции</div>
+                <div class="confession-stats">
+                    <span>📖 Библия</span>
+                    <span>📜 Святоотеческие труды</span>
+                </div>
             </div>
         </div>
     </div>
@@ -535,6 +590,12 @@
             currentConfession = null;
         }
 
+        // Показать настройки
+        function showSettings() {
+            // Пока что просто показываем alert
+            alert('Настройки будут доступны в следующей версии!');
+        }
+
         async function logout() {
             const token = getAuthToken();
             if (!token) return;
@@ -619,7 +680,9 @@
             if (sources && sources.length > 0) {
                 sourcesHtml = '<div class="message-sources">';
                 sources.forEach(source => {
-                    sourcesHtml += `<a href="#" class="source-link" onclick="showSource('${source.type}', ${source.id})">${getSourceTypeName(source.type)} ${source.id}</a>`;
+                    const sourceId = source.id || source.content?.id || '';
+                    const sourceName = getSourceDisplayName(source);
+                    sourcesHtml += `<a href="#" class="source-link" onclick="showSource('${source.type}', '${sourceId}')">${sourceName}</a>`;
                 });
                 sourcesHtml += '</div>';
             }
@@ -707,6 +770,26 @@
                 'orthodox': 'Православие'
             };
             return names[type] || type;
+        }
+
+        function getSourceDisplayName(source) {
+            const typeName = getSourceTypeName(source.type);
+            
+            if (source.type === 'quran' && source.content) {
+                const surah = source.content.surah_number || '';
+                const verse = source.content.verse_number || '';
+                return `${typeName} ${surah}:${verse}`;
+            } else if (source.type === 'hadith' && source.content) {
+                const collection = source.content.collection || '';
+                const number = source.content.hadith_number || source.content.number || '';
+                return `${typeName} ${collection} ${number}`;
+            } else if (source.type === 'orthodox' && source.content) {
+                const book = source.content.book_name || '';
+                const author = source.content.author || '';
+                return `${typeName} ${author} ${book}`;
+            }
+            
+            return typeName;
         }
 
         function showSource(type, id) {

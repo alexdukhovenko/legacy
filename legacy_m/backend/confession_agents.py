@@ -185,7 +185,7 @@ class SunniAgent(BaseConfessionAgent):
         # Добавляем аяты Корана
         for verse in quran_query.limit(limit * 5):  # Берем еще больше для лучшего отбора
             score = self._calculate_similarity_score(question, verse.translation_ru or "")
-            if score > 0.05:  # Еще больше снижаем порог для семантического поиска
+            if score > 0.01:  # Снижаем порог для семантического поиска
                 results.append({
                     'type': 'quran',
                     'content': {
@@ -410,7 +410,7 @@ class ShiaAgent(BaseConfessionAgent):
         # Добавляем аяты Корана
         for verse in quran_query.limit(limit * 5):  # Берем еще больше для лучшего отбора
             score = self._calculate_similarity_score(question, verse.translation_ru or "")
-            if score > 0.05:  # Еще больше снижаем порог для семантического поиска
+            if score > 0.01:  # Снижаем порог для семантического поиска
                 results.append({
                     'type': 'quran',
                     'content': {
