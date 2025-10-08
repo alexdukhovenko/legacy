@@ -23,7 +23,12 @@ class ExternalDataLoader:
     
     def __init__(self, db: Session):
         self.db = db
-        self.data_repo_url = "https://github.com/alexdukhovenko/legacy-spiritual-data"
+        self.data_repos = {
+            'orthodox': "https://github.com/alexdukhovenko/legacy-orthodox-data",
+            'sunni': "https://github.com/alexdukhovenko/legacy-sunni-data", 
+            'shia': "https://github.com/alexdukhovenko/legacy-shia-data",
+            'common': "https://github.com/alexdukhovenko/legacy-common-data"
+        }
         self.temp_dir = None
     
     def load_all_data_from_repo(self) -> Dict[str, int]:
