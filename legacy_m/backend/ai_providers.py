@@ -33,11 +33,11 @@ class OpenAIProvider(AIProvider):
             raise Exception("OpenAI недоступен")
         
         try:
-            # Пробуем GPT-5 с стандартными параметрами
+            # Пробуем GPT-5 с правильными параметрами
             response = self.client.chat.completions.create(
                 model="gpt-5",
                 messages=messages,
-                max_tokens=max_tokens,
+                max_completion_tokens=max_tokens,
                 temperature=0.3
             )
             return response.choices[0].message.content.strip()
