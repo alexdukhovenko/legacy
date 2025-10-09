@@ -310,7 +310,7 @@ class EnhancedAIAgent:
         
         try:
             response = client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-5",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}

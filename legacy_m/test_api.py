@@ -24,7 +24,7 @@ def test_openai_api():
         client = openai.OpenAI(api_key=api_key)
         
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-5",
             messages=[
                 {"role": "user", "content": "Привет! Это тест API."}
             ],

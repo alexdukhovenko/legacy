@@ -34,7 +34,7 @@ class OpenAIProvider(AIProvider):
         
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-5",
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=0.3
