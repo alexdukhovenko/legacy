@@ -315,7 +315,8 @@ class EnhancedAIAgent:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                max_tokens=400,
+                reasoning={"effort": "medium"},
+                text={"verbosity": "medium"},
                 temperature=0.3
             )
             

@@ -34,16 +34,29 @@ class SimpleAIProvider:
             raise Exception("OpenAI недоступен")
         
         try:
+            # Пробуем GPT-5 с новыми параметрами
             response = self.client.chat.completions.create(
                 model="gpt-5",
                 messages=messages,
-                max_tokens=max_tokens,
+                reasoning={"effort": "medium"},
+                text={"verbosity": "medium"},
                 temperature=0.3
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
-            logger.error(f"❌ Ошибка OpenAI: {e}")
-            raise
+            logger.warning(f"GPT-5 недоступна, пробуем GPT-4o: {e}")
+            try:
+                # Fallback на GPT-4o с стандартными параметрами
+                response = self.client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=messages,
+                    max_tokens=max_tokens,
+                    temperature=0.3
+                )
+                return response.choices[0].message.content.strip()
+            except Exception as e2:
+                logger.error(f"❌ Ошибка OpenAI (GPT-4o fallback): {e2}")
+                raise
 
 # Глобальный экземпляр
 simple_ai_provider = SimpleAIProvider()

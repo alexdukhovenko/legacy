@@ -319,7 +319,8 @@ class SimpleIslamicAIAgent:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                max_tokens=1500,  # Значительно увеличиваем для полного ответа
+                reasoning={"effort": "medium"},
+                text={"verbosity": "medium"},
                 temperature=0.3  # Более детерминированные ответы
             )
             
