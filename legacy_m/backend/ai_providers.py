@@ -85,7 +85,7 @@ class AnthropicProvider(AIProvider):
                     user_msg = msg["content"]
             
             response = self.client.messages.create(
-                model="claude-3-sonnet-20240229",
+                model="claude-3-5-sonnet-20241022",
                 max_tokens=max_tokens,
                 system=system_msg,
                 messages=[{"role": "user", "content": user_msg}]
@@ -152,8 +152,8 @@ class AIProviderManager:
     
     def __init__(self):
         self.providers = [
+            AnthropicProvider(),  # ANTHROPIC ПЕРВЫМ!
             OpenAIProvider(),
-            AnthropicProvider(),
             LocalProvider()
         ]
     

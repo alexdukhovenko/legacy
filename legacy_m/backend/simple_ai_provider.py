@@ -34,16 +34,29 @@ class SimpleAIProvider:
             raise Exception("OpenAI недоступен")
         
         try:
-            # Пробуем GPT-5 с правильными параметрами
-            response = self.client.chat.completions.create(
-                model="gpt-5",
-                messages=messages,
-                max_completion_tokens=max_tokens,
-                temperature=0.3
+            # Пробуем ANTHROPIC CLAUDE-3.5-SONNET
+            import anthropic
+            client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+            
+            # Конвертируем сообщения для Claude
+            system_msg = ""
+            user_msg = ""
+            
+            for msg in messages:
+                if msg["role"] == "system":
+                    system_msg = msg["content"]
+                elif msg["role"] == "user":
+                    user_msg = msg["content"]
+            
+            response = client.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=max_tokens,
+                system=system_msg,
+                messages=[{"role": "user", "content": user_msg}]
             )
-            return response.choices[0].message.content.strip()
+            return response.content[0].text
         except Exception as e:
-            logger.warning(f"GPT-5 недоступна, пробуем GPT-4o: {e}")
+            logger.warning(f"Anthropic недоступен, пробуем GPT-4o: {e}")
             try:
                 # Fallback на GPT-4o с стандартными параметрами
                 response = self.client.chat.completions.create(
