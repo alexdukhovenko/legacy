@@ -37,7 +37,7 @@ class BaseConfessionAgent:
         """Возвращает системный промпт для конкретной конфессии"""
         raise NotImplementedError
     
-    def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def search_relevant_texts(self, question: str, limit: int = 15) -> List[Dict[str, Any]]:
         """Поиск релевантных текстов в базе данных"""
         raise NotImplementedError
     
@@ -242,7 +242,7 @@ class SunniAgent(BaseConfessionAgent):
 
 **КРИТИЧЕСКОЕ НАПОМИНАНИЕ**: Если ты не можешь дать точную ссылку на источник — используй общие формулировки и ставь маркер [ТРЕБУЕТ ВЕРИФИКАЦИИ]. Честность в признании границ знания — часть исламской этики."""
     
-    def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def search_relevant_texts(self, question: str, limit: int = 15) -> List[Dict[str, Any]]:
         """Поиск в суннитских источниках"""
         logger.info(f"🔍 SunniAgent: Ищем релевантные тексты для вопроса: '{question}'")
         
@@ -274,7 +274,7 @@ class SunniAgent(BaseConfessionAgent):
         results = []
         
         # Добавляем аяты Корана
-        for verse in quran_query.limit(limit * 5):  # Берем еще больше для лучшего отбора
+        for verse in quran_query.limit(limit * 10):  # Берем еще больше для лучшего отбора
             score = self._calculate_similarity_score(question, verse.translation_ru or "")
             if score > 0.001:  # УЛЬТРА низкий порог - находим ВСЕ
                 results.append({
@@ -294,7 +294,7 @@ class SunniAgent(BaseConfessionAgent):
                 })
         
         # Добавляем хадисы
-        for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
+        for hadith in hadith_query.limit(limit * 8):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
             if score > 0.000001:  # УЛЬТРА низкий порог - находим ВСЕ
                 results.append({
@@ -324,7 +324,7 @@ class SunniAgent(BaseConfessionAgent):
             logger.warning(f"🔍 Проверяем порог similarity_score: 0.000001")
             # Показываем первые несколько результатов с их scores
             all_results = []
-            for hadith in hadith_query.limit(5):
+            for hadith in hadith_query.limit(10):
                 score = self._calculate_similarity_score(question, hadith.translation_ru or "")
                 all_results.append(f"Хадис {hadith.id}: score={score:.8f}")
             logger.warning(f"📊 Первые 5 хадисов с scores: {all_results}")
@@ -361,7 +361,7 @@ class SunniAgent(BaseConfessionAgent):
             ]
             
             try:
-                response_text = simple_ai_provider.generate_response(messages, max_tokens=800)
+                response_text = simple_ai_provider.generate_response(messages, max_tokens=1200)
                 logger.info(f"✅ Ответ от AI провайдера получен")
             except Exception as e:
                 logger.error(f"❌ Ошибка AI провайдера: {e}")
@@ -406,9 +406,9 @@ class SunniAgent(BaseConfessionAgent):
         for text in texts:
             content = text['content']
             if content['type'] == 'quran':
-                context_parts.append(f"Коран, сура {content['surah_number']}, аят {content['verse_number']}: {content['translation_ru'][:150]}...")
+                context_parts.append(f"Коран, сура {content['surah_number']}, аят {content['verse_number']}: {content['translation_ru'][:400]}...")
             elif content['type'] == 'hadith':
-                context_parts.append(f"Хадис из {content['collection']}: {content['translation_ru'][:150]}...")
+                context_parts.append(f"Хадис из {content['collection']}: {content['translation_ru'][:400]}...")
         
         return "\n".join(context_parts)
     
@@ -577,7 +577,7 @@ class ShiaAgent(BaseConfessionAgent):
 
 **КРИТИЧЕСКОЕ НАПОМИНАНИЕ**: Честность в признании границ знания — наследие Имама Али (мир ему), который сказал: "Не стыдись сказать 'я не знаю' о том, чего не знаешь"."""
     
-    def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def search_relevant_texts(self, question: str, limit: int = 15) -> List[Dict[str, Any]]:
         """Поиск в шиитских источниках"""
         logger.info(f"🔍 ShiaAgent: Ищем релевантные тексты для вопроса: '{question}'")
         
@@ -609,7 +609,7 @@ class ShiaAgent(BaseConfessionAgent):
         results = []
         
         # Добавляем аяты Корана
-        for verse in quran_query.limit(limit * 5):  # Берем еще больше для лучшего отбора
+        for verse in quran_query.limit(limit * 10):  # Берем еще больше для лучшего отбора
             score = self._calculate_similarity_score(question, verse.translation_ru or "")
             if score > 0.001:  # УЛЬТРА низкий порог - находим ВСЕ
                 results.append({
@@ -629,7 +629,7 @@ class ShiaAgent(BaseConfessionAgent):
                 })
         
         # Добавляем хадисы
-        for hadith in hadith_query.limit(limit * 3):  # Увеличиваем количество проверяемых хадисов
+        for hadith in hadith_query.limit(limit * 8):  # Увеличиваем количество проверяемых хадисов
             score = self._calculate_similarity_score(question, hadith.translation_ru or "")
             if score > 0.000001:  # УЛЬТРА низкий порог - находим ВСЕ
                 results.append({
@@ -659,7 +659,7 @@ class ShiaAgent(BaseConfessionAgent):
             logger.warning(f"🔍 Проверяем порог similarity_score: 0.000001")
             # Показываем первые несколько результатов с их scores
             all_results = []
-            for hadith in hadith_query.limit(5):
+            for hadith in hadith_query.limit(10):
                 score = self._calculate_similarity_score(question, hadith.translation_ru or "")
                 all_results.append(f"Хадис {hadith.id}: score={score:.8f}")
             logger.warning(f"📊 Первые 5 хадисов с scores: {all_results}")
@@ -697,7 +697,7 @@ class ShiaAgent(BaseConfessionAgent):
             ]
             
             try:
-                response_text = simple_ai_provider.generate_response(messages, max_tokens=800)
+                response_text = simple_ai_provider.generate_response(messages, max_tokens=1200)
                 logger.info(f"✅ Ответ от AI провайдера получен")
             except Exception as e:
                 logger.error(f"❌ Ошибка AI провайдера: {e}")
@@ -742,9 +742,9 @@ class ShiaAgent(BaseConfessionAgent):
         for text in texts:
             content = text['content']
             if content['type'] == 'quran':
-                context_parts.append(f"Коран, сура {content['surah_number']}, аят {content['verse_number']}: {content['translation_ru'][:150]}...")
+                context_parts.append(f"Коран, сура {content['surah_number']}, аят {content['verse_number']}: {content['translation_ru'][:400]}...")
             elif content['type'] == 'hadith':
-                context_parts.append(f"Хадис из {content['collection']}: {content['translation_ru'][:150]}...")
+                context_parts.append(f"Хадис из {content['collection']}: {content['translation_ru'][:400]}...")
         
         return "\n".join(context_parts)
     
@@ -914,7 +914,7 @@ class OrthodoxAgent(BaseConfessionAgent):
 
 **КРИТИЧЕСКОЕ НАПОМИНАНИЕ**: Смирение в признании границ знания — добродетель. Как сказал преподобный Исаак Сирин: "Лучше сказать 'не знаю', чем говорить о Боге неподобающее"."""
     
-    def search_relevant_texts(self, question: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def search_relevant_texts(self, question: str, limit: int = 15) -> List[Dict[str, Any]]:
         """Поиск в православных источниках"""
         # Поиск в православных текстах
         orthodox_query = self.db.query(OrthodoxText).filter(
@@ -924,9 +924,9 @@ class OrthodoxAgent(BaseConfessionAgent):
         results = []
         
         # Добавляем православные тексты
-        for text in orthodox_query.limit(limit * 10):  # Берем еще больше для лучшего отбора
-            # Используем простой поиск по ключевым словам для православия
-            score = self._fallback_similarity_score(question, text.translation_ru or "")
+        for text in orthodox_query.limit(limit * 20):  # Берем еще больше для лучшего отбора
+            # Используем основной алгоритм поиска для православия
+            score = self._calculate_similarity_score(question, text.translation_ru or "")
             if score > 0.01:  # УЛЬТРА низкий порог - находим ВСЕ
                 results.append({
                     'type': 'orthodox',
@@ -950,7 +950,7 @@ class OrthodoxAgent(BaseConfessionAgent):
         # Если не нашли релевантных текстов, берем любые православные тексты
         if not results:
             logger.info("Не найдено релевантных православных текстов, используем fallback")
-            for text in orthodox_query.limit(3):
+            for text in orthodox_query.limit(10):
                 results.append({
                     'type': 'orthodox',
                     'text': text.translation_ru or text.original_text or "",
@@ -1029,7 +1029,7 @@ class OrthodoxAgent(BaseConfessionAgent):
             ]
             
             try:
-                response_text = simple_ai_provider.generate_response(messages, max_tokens=800)
+                response_text = simple_ai_provider.generate_response(messages, max_tokens=1200)
                 logger.info(f"✅ Ответ от AI провайдера получен")
             except Exception as e:
                 logger.error(f"❌ Ошибка AI провайдера: {e}")
@@ -1103,7 +1103,7 @@ class OrthodoxAgent(BaseConfessionAgent):
                 elif content['chapter_number']:
                     source_info += f", глава {content['chapter_number']}"
                 
-                context_parts.append(f"{source_info}: {content['translation_ru'][:150]}...")
+                context_parts.append(f"{source_info}: {content['translation_ru'][:400]}...")
         
         return "\n".join(context_parts)
     
