@@ -30,7 +30,7 @@
 
         /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.95);
+            background: #4A3B30;
             backdrop-filter: blur(10px);
             padding: 0.5rem 0;
             position: fixed;
@@ -51,7 +51,7 @@
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #2c3e50;
+            color: #ffffff;
             text-decoration: none;
         }
 
@@ -61,14 +61,14 @@
         }
 
         .nav a {
-            color: #2c3e50;
+            color: #ffffff;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .nav a:hover {
-            color: #8b7355;
+            color: #B8A792;
         }
 
         .auth-buttons {
@@ -87,24 +87,24 @@
         }
 
         .btn-primary {
-            background: #8b7355;
+            background: #A68F7A;
             color: #ffffff;
         }
 
         .btn-primary:hover {
-            background: #6b5b47;
+            background: #8C7A6E;
             transform: translateY(-2px);
         }
 
         .btn-secondary {
             background: transparent;
-            color: #8b7355;
-            border: 2px solid #8b7355;
+            color: #ffffff;
+            border: 2px solid #B8A792;
         }
 
         .btn-secondary:hover {
-            background: #8b7355;
-            color: #ffffff;
+            background: #B8A792;
+            color: #4A3B30;
         }
 
         /* Hero Section */
@@ -141,14 +141,14 @@
         /* Features Section */
         .features {
             padding: 4rem 0;
-            background: rgba(26, 15, 8, 0.5);
+            background: #E0DED9;
         }
 
         .section-title {
             text-align: center;
             font-size: 2.5rem;
             font-weight: 700;
-            color: #2c3e50;
+            color: #4A3B30;
             margin-bottom: 3rem;
         }
 
@@ -160,16 +160,16 @@
         }
 
         .feature-card {
-            background: rgba(212, 175, 55, 0.1);
+            background: #B8A792;
             padding: 2rem;
             border-radius: 12px;
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(74, 59, 48, 0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 30px rgba(74, 59, 48, 0.2);
         }
 
         .feature-icon {
@@ -180,19 +180,19 @@
         .feature-card h3 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #2c3e50;
+            color: #4A3B30;
             margin-bottom: 1rem;
         }
 
         .feature-card p {
-            color: #2c3e50;
+            color: #4A3B30;
             line-height: 1.6;
         }
 
         /* Stats Section */
         .stats {
             padding: 4rem 0;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(44, 24, 16, 0.8) 100%);
+            background: #D9D4CF;
         }
 
         .stats-grid {
@@ -209,13 +209,13 @@
         .stat-number {
             font-size: 3rem;
             font-weight: 700;
-            color: #2c3e50;
+            color: #4A3B30;
             display: block;
         }
 
         .stat-label {
             font-size: 1.1rem;
-            color: #2c3e50;
+            color: #4A3B30;
             margin-top: 0.5rem;
         }
 
@@ -223,19 +223,19 @@
         .cta {
             padding: 4rem 0;
             text-align: center;
-            background: rgba(26, 15, 8, 0.5);
+            background: #7A7068;
         }
 
         .cta h2 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #2c3e50;
+            color: #ffffff;
             margin-bottom: 1rem;
         }
 
         .cta p {
             font-size: 1.2rem;
-            color: #2c3e50;
+            color: #ffffff;
             margin-bottom: 2rem;
             max-width: 600px;
             margin-left: auto;
@@ -244,14 +244,14 @@
 
         /* Footer */
         .footer {
-            background: #1a0f08;
+            background: #4A3B30;
             padding: 2rem 0;
             text-align: center;
-            border-top: 2px solid rgba(212, 175, 55, 0.3);
+            border-top: 2px solid rgba(184, 167, 146, 0.3);
         }
 
         .footer p {
-            color: #2c3e50;
+            color: #ffffff;
         }
 
         /* Responsive */
@@ -424,14 +424,11 @@
             });
         });
 
-        // Add scroll effect to header
+        // Add scroll effect to header - ИСПРАВЛЕНО: стабильный цвет
         window.addEventListener('scroll', function() {
             const header = document.querySelector('.header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(44, 24, 16, 0.98)';
-            } else {
-                header.style.background = 'rgba(44, 24, 16, 0.95)';
-            }
+            // Всегда используем один и тот же цвет навигации
+            header.style.background = '#4A3B30';
         });
     </script>
 </body>
