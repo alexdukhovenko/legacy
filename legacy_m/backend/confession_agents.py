@@ -15,6 +15,7 @@ from database.models import QuranVerse, Hadith, Commentary, OrthodoxText, Orthod
 from .simple_ai_provider import simple_ai_provider
 from .simple_fallback import simple_fallback
 from .enhanced_ai_agent import EnhancedAIAgent
+from .hybrid_search import HybridSearchEngine, SearchResult
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -819,6 +820,43 @@ class OrthodoxAgent(BaseConfessionAgent):
     def __init__(self, confession: str, db: Session):
         super().__init__(confession, db)
         self.confession_name = "orthodox"
+        self.hybrid_search = HybridSearchEngine()
+        self._initialize_hybrid_search()
+    
+    def _initialize_hybrid_search(self):
+        """Инициализация гибридного поиска для православных текстов"""
+        try:
+            # Получаем все православные тексты
+            orthodox_texts = self.db.query(OrthodoxText).filter(
+                OrthodoxText.confession == 'orthodox'
+            ).all()
+            
+            documents = []
+            metadata = []
+            
+            for text in orthodox_texts:
+                doc_text = text.translation_ru or text.original_text or ""
+                if doc_text:
+                    documents.append(doc_text)
+                    metadata.append({
+                        'id': text.id,
+                        'book_name': text.book_name or '',
+                        'author': text.author or '',
+                        'confession': text.confession or '',
+                        'theme': text.theme or '',
+                        'source_type': text.source_type or '',
+                        'chapter_number': text.chapter_number,
+                        'verse_number': text.verse_number
+                    })
+            
+            if documents:
+                self.hybrid_search.fit(documents, metadata)
+                logger.info(f"✅ Hybrid search initialized for {len(documents)} Orthodox texts")
+            else:
+                logger.warning("⚠️ No Orthodox texts found for hybrid search")
+                
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize hybrid search: {e}")
     
     def _get_system_prompt(self) -> str:
         return """# IDENTITY & EXPERTISE
@@ -915,21 +953,57 @@ class OrthodoxAgent(BaseConfessionAgent):
 **КРИТИЧЕСКОЕ НАПОМИНАНИЕ**: Смирение в признании границ знания — добродетель. Как сказал преподобный Исаак Сирин: "Лучше сказать 'не знаю', чем говорить о Боге неподобающее"."""
     
     def search_relevant_texts(self, question: str, limit: int = 15) -> List[Dict[str, Any]]:
-        """Поиск в православных источниках"""
-        # Поиск в православных текстах
+        """Поиск в православных источниках с гибридным поиском"""
+        try:
+            # Используем гибридный поиск
+            search_results = self.hybrid_search.search(question, confession='orthodox', limit=limit)
+            
+            # Конвертируем результаты в нужный формат
+            results = []
+            for result in search_results:
+                results.append({
+                    'type': 'orthodox',
+                    'text': result.text,
+                    'content': {
+                        'id': result.id,
+                        'type': 'orthodox',
+                        'source_type': 'orthodox_text',
+                        'book_name': result.book_name,
+                        'author': result.author,
+                        'chapter_number': None,
+                        'verse_number': None,
+                        'original_text': result.text,
+                        'translation_ru': result.text,
+                        'commentary': '',
+                        'theme': result.theme
+                    },
+                    'similarity_score': result.score,
+                    'score_breakdown': result.score_breakdown,
+                    'boosts_applied': result.boosts_applied
+                })
+            
+            logger.info(f"🔍 OrthodoxAgent: Hybrid search found {len(results)} results")
+            for result in results[:5]:  # Логируем топ-5
+                logger.info(f"📖 OrthodoxAgent: '{result['content']['book_name']}' - score: {result['similarity_score']:.3f} "
+                           f"(boosts: {result.get('boosts_applied', [])})")
+            
+            return results
+            
+        except Exception as e:
+            logger.error(f"❌ Hybrid search failed, falling back to simple search: {e}")
+            # Fallback к простому поиску
+            return self._fallback_search(question, limit)
+    
+    def _fallback_search(self, question: str, limit: int) -> List[Dict[str, Any]]:
+        """Fallback поиск при ошибке гибридного поиска"""
         orthodox_query = self.db.query(OrthodoxText).filter(
             OrthodoxText.confession == 'orthodox'
         )
         
         results = []
-        
-        # Добавляем православные тексты
-        logger.info(f"🔍 OrthodoxAgent: Проверяем {limit * 50} православных текстов")
-        for text in orthodox_query.limit(limit * 50):  # Берем еще больше для лучшего отбора
-            # Используем основной алгоритм поиска для православия
+        for text in orthodox_query.limit(limit * 3):
             score = self._calculate_similarity_score(question, text.translation_ru or "")
-            logger.info(f"📖 OrthodoxAgent: Текст '{text.book_name}' - score: {score}")
-            if score > 0.001:  # УЛЬТРА-УЛЬТРА низкий порог - находим ВСЕ
+            if score > 0.1:  # Более мягкий порог для fallback
                 results.append({
                     'type': 'orthodox',
                     'text': text.translation_ru or text.original_text or "",
@@ -949,30 +1023,6 @@ class OrthodoxAgent(BaseConfessionAgent):
                     'similarity_score': score
                 })
         
-        # Если не нашли релевантных текстов, берем любые православные тексты
-        if not results:
-            logger.info("Не найдено релевантных православных текстов, используем fallback")
-            for text in orthodox_query.limit(20):
-                results.append({
-                    'type': 'orthodox',
-                    'text': text.translation_ru or text.original_text or "",
-                    'content': {
-                        'id': text.id,
-                        'type': 'orthodox',
-                        'source_type': text.source_type,
-                        'book_name': text.book_name,
-                        'author': text.author,
-                        'chapter_number': text.chapter_number,
-                        'verse_number': text.verse_number,
-                        'original_text': text.original_text,
-                        'translation_ru': text.translation_ru,
-                        'commentary': text.commentary,
-                        'theme': text.theme
-                    },
-                    'similarity_score': 0.1  # Минимальный score для fallback
-                })
-        
-        # Сортируем по релевантности
         results.sort(key=lambda x: x['similarity_score'], reverse=True)
         return results[:limit]
     

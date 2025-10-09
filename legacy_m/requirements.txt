@@ -13,6 +13,7 @@ openai==1.3.7
 anthropic==0.69.0
 requests==2.31.0
 numpy==1.24.3
+scikit-learn==1.3.2
 
 # Text Processing
 PyPDF2==3.0.1
