@@ -448,12 +448,27 @@ class SunniAgent(BaseConfessionAgent):
         if not question_words or not text_words:
             return 0.0
         
-        # Проверяем частичные совпадения для важных слов
-        important_words = ['бог', 'аллах', 'молитва', 'вера', 'ислам', 'коран', 'хадис', 'пророк', 'мухаммад', 
-                          'семья', 'семейный', 'проблема', 'решить', 'насилие', 'мир', 'спокойствие', 'терпение',
-                          'любовь', 'уважение', 'прощение', 'доброта', 'милосердие', 'справедливость']
-        for word in important_words:
-            if word in question_clean and word in text_clean:
+        # Расширенный список важных слов с синонимами
+        important_words = {
+            'бог': ['бог', 'аллах', 'господь', 'творец', 'создатель'],
+            'молитва': ['молитва', 'намаз', 'дуа', 'поклонение', 'богослужение'],
+            'вера': ['вера', 'иман', 'убеждение', 'религия'],
+            'ислам': ['ислам', 'мусульманство', 'мусульманин'],
+            'семья': ['семья', 'семейный', 'супруг', 'супруга', 'дети', 'родители'],
+            'проблема': ['проблема', 'трудность', 'конфликт', 'спор', 'разногласие'],
+            'решить': ['решить', 'решение', 'уладить', 'разрешить', 'устранить'],
+            'мир': ['мир', 'спокойствие', 'тишина', 'покой', 'гармония'],
+            'терпение': ['терпение', 'терпеливость', 'выносливость', 'стойкость'],
+            'любовь': ['любовь', 'любить', 'привязанность', 'нежность'],
+            'доброта': ['доброта', 'добро', 'милосердие', 'сострадание', 'милость']
+        }
+        
+        # Проверяем важные слова и их синонимы
+        for category, synonyms in important_words.items():
+            question_has_word = any(word in question_clean for word in synonyms)
+            text_has_word = any(word in text_clean for word in synonyms)
+            
+            if question_has_word and text_has_word:
                 return 0.8  # Высокая релевантность для важных слов
         
         # Jaccard similarity
@@ -468,6 +483,14 @@ class SunniAgent(BaseConfessionAgent):
                 if len(q_word) > 3 and len(t_word) > 3:
                     if q_word in t_word or t_word in q_word:
                         base_score += 0.2
+        
+        # Бонус за религиозную тематику (если оба текста содержат религиозные слова)
+        religious_words = ['бог', 'аллах', 'молитва', 'вера', 'ислам', 'коран', 'хадис', 'пророк', 'мухаммад', 'иисус', 'христос', 'библия']
+        question_religious = any(word in question_clean for word in religious_words)
+        text_religious = any(word in text_clean for word in religious_words)
+        
+        if question_religious and text_religious:
+            base_score += 0.3  # Бонус за религиозную тематику
         
         return min(base_score, 1.0)  # Ограничиваем максимумом 1.0
 
@@ -779,12 +802,27 @@ class ShiaAgent(BaseConfessionAgent):
         if not question_words or not text_words:
             return 0.0
         
-        # Проверяем частичные совпадения для важных слов
-        important_words = ['бог', 'аллах', 'молитва', 'вера', 'ислам', 'коран', 'хадис', 'пророк', 'мухаммад', 
-                          'семья', 'семейный', 'проблема', 'решить', 'насилие', 'мир', 'спокойствие', 'терпение',
-                          'любовь', 'уважение', 'прощение', 'доброта', 'милосердие', 'справедливость']
-        for word in important_words:
-            if word in question_clean and word in text_clean:
+        # Расширенный список важных слов с синонимами
+        important_words = {
+            'бог': ['бог', 'аллах', 'господь', 'творец', 'создатель'],
+            'молитва': ['молитва', 'намаз', 'дуа', 'поклонение', 'богослужение'],
+            'вера': ['вера', 'иман', 'убеждение', 'религия'],
+            'ислам': ['ислам', 'мусульманство', 'мусульманин'],
+            'семья': ['семья', 'семейный', 'супруг', 'супруга', 'дети', 'родители'],
+            'проблема': ['проблема', 'трудность', 'конфликт', 'спор', 'разногласие'],
+            'решить': ['решить', 'решение', 'уладить', 'разрешить', 'устранить'],
+            'мир': ['мир', 'спокойствие', 'тишина', 'покой', 'гармония'],
+            'терпение': ['терпение', 'терпеливость', 'выносливость', 'стойкость'],
+            'любовь': ['любовь', 'любить', 'привязанность', 'нежность'],
+            'доброта': ['доброта', 'добро', 'милосердие', 'сострадание', 'милость']
+        }
+        
+        # Проверяем важные слова и их синонимы
+        for category, synonyms in important_words.items():
+            question_has_word = any(word in question_clean for word in synonyms)
+            text_has_word = any(word in text_clean for word in synonyms)
+            
+            if question_has_word and text_has_word:
                 return 0.8  # Высокая релевантность для важных слов
         
         # Jaccard similarity
@@ -799,6 +837,14 @@ class ShiaAgent(BaseConfessionAgent):
                 if len(q_word) > 3 and len(t_word) > 3:
                     if q_word in t_word or t_word in q_word:
                         base_score += 0.2
+        
+        # Бонус за религиозную тематику (если оба текста содержат религиозные слова)
+        religious_words = ['бог', 'аллах', 'молитва', 'вера', 'ислам', 'коран', 'хадис', 'пророк', 'мухаммад', 'иисус', 'христос', 'библия']
+        question_religious = any(word in question_clean for word in religious_words)
+        text_religious = any(word in text_clean for word in religious_words)
+        
+        if question_religious and text_religious:
+            base_score += 0.3  # Бонус за религиозную тематику
         
         return min(base_score, 1.0)  # Ограничиваем максимумом 1.0
 
@@ -1137,12 +1183,27 @@ class OrthodoxAgent(BaseConfessionAgent):
         if not question_words or not text_words:
             return 0.0
         
-        # Проверяем частичные совпадения для важных слов
-        important_words = ['бог', 'аллах', 'молитва', 'вера', 'ислам', 'коран', 'хадис', 'пророк', 'мухаммад', 
-                          'семья', 'семейный', 'проблема', 'решить', 'насилие', 'мир', 'спокойствие', 'терпение',
-                          'любовь', 'уважение', 'прощение', 'доброта', 'милосердие', 'справедливость']
-        for word in important_words:
-            if word in question_clean and word in text_clean:
+        # Расширенный список важных слов с синонимами
+        important_words = {
+            'бог': ['бог', 'аллах', 'господь', 'творец', 'создатель'],
+            'молитва': ['молитва', 'намаз', 'дуа', 'поклонение', 'богослужение'],
+            'вера': ['вера', 'иман', 'убеждение', 'религия'],
+            'ислам': ['ислам', 'мусульманство', 'мусульманин'],
+            'семья': ['семья', 'семейный', 'супруг', 'супруга', 'дети', 'родители'],
+            'проблема': ['проблема', 'трудность', 'конфликт', 'спор', 'разногласие'],
+            'решить': ['решить', 'решение', 'уладить', 'разрешить', 'устранить'],
+            'мир': ['мир', 'спокойствие', 'тишина', 'покой', 'гармония'],
+            'терпение': ['терпение', 'терпеливость', 'выносливость', 'стойкость'],
+            'любовь': ['любовь', 'любить', 'привязанность', 'нежность'],
+            'доброта': ['доброта', 'добро', 'милосердие', 'сострадание', 'милость']
+        }
+        
+        # Проверяем важные слова и их синонимы
+        for category, synonyms in important_words.items():
+            question_has_word = any(word in question_clean for word in synonyms)
+            text_has_word = any(word in text_clean for word in synonyms)
+            
+            if question_has_word and text_has_word:
                 return 0.8  # Высокая релевантность для важных слов
         
         # Jaccard similarity
@@ -1157,6 +1218,14 @@ class OrthodoxAgent(BaseConfessionAgent):
                 if len(q_word) > 3 and len(t_word) > 3:
                     if q_word in t_word or t_word in q_word:
                         base_score += 0.2
+        
+        # Бонус за религиозную тематику (если оба текста содержат религиозные слова)
+        religious_words = ['бог', 'аллах', 'молитва', 'вера', 'ислам', 'коран', 'хадис', 'пророк', 'мухаммад', 'иисус', 'христос', 'библия']
+        question_religious = any(word in question_clean for word in religious_words)
+        text_religious = any(word in text_clean for word in religious_words)
+        
+        if question_religious and text_religious:
+            base_score += 0.3  # Бонус за религиозную тематику
         
         return min(base_score, 1.0)  # Ограничиваем максимумом 1.0
 
