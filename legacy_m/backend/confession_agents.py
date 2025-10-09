@@ -831,12 +831,15 @@ class OrthodoxAgent(BaseConfessionAgent):
                 OrthodoxText.confession == 'orthodox'
             ).all()
             
+            logger.info(f"🔍 Found {len(orthodox_texts)} Orthodox texts in database")
+            
             documents = []
             metadata = []
+            skipped_count = 0
             
             for text in orthodox_texts:
                 doc_text = text.translation_ru or text.original_text or ""
-                if doc_text:
+                if doc_text and len(doc_text.strip()) > 10:  # Минимальная длина текста
                     documents.append(doc_text)
                     metadata.append({
                         'id': text.id,
@@ -848,15 +851,25 @@ class OrthodoxAgent(BaseConfessionAgent):
                         'chapter_number': text.chapter_number,
                         'verse_number': text.verse_number
                     })
+                else:
+                    skipped_count += 1
+                    logger.debug(f"⚠️ Skipped text {text.id}: empty or too short")
+            
+            logger.info(f"📊 Orthodox texts: total={len(orthodox_texts)}, valid={len(documents)}, skipped={skipped_count}")
             
             if documents:
                 self.hybrid_search.fit(documents, metadata)
                 logger.info(f"✅ Hybrid search initialized for {len(documents)} Orthodox texts")
+                
+                # КРИТИЧЕСКАЯ ПРОВЕРКА
+                if len(documents) < 10:
+                    logger.critical(f"🚨 CRITICAL: Only {len(documents)} Orthodox texts loaded! Expected 750+. Check data loading!")
             else:
-                logger.warning("⚠️ No Orthodox texts found for hybrid search")
+                logger.critical("🚨 CRITICAL: No Orthodox texts found for hybrid search! Check data loading!")
                 
         except Exception as e:
             logger.error(f"❌ Failed to initialize hybrid search: {e}")
+            raise
     
     def _get_system_prompt(self) -> str:
         return """# IDENTITY & EXPERTISE

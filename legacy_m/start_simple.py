@@ -34,6 +34,37 @@ def main():
         load_simple_data()
         print("✅ Simple data loaded")
         
+        # Загрузка расширенных православных данных
+        print("📚 Loading extended Orthodox data...")
+        from scripts.load_extended_data import load_extended_orthodox_data
+        load_extended_orthodox_data()
+        print("✅ Extended Orthodox data loaded")
+        
+        # Проверяем количество загруженных данных
+        print("🔍 Checking loaded data...")
+        from database.database import SessionLocal
+        from database.models import QuranVerse, Hadith, OrthodoxText
+        
+        db = SessionLocal()
+        try:
+            quran_count = db.query(QuranVerse).count()
+            hadith_count = db.query(Hadith).count()
+            orthodox_count = db.query(OrthodoxText).count()
+            
+            print(f"📊 Loaded documents: Quran={quran_count}, Hadith={hadith_count}, Orthodox={orthodox_count}")
+            print(f"📊 TOTAL={quran_count + hadith_count + orthodox_count}")
+            
+            # КРИТИЧЕСКАЯ ПРОВЕРКА
+            if orthodox_count < 10:
+                print(f"🚨 CRITICAL: Only {orthodox_count} Orthodox texts loaded! Expected 750+.")
+                print("🚨 This will cause search to return only 3 results!")
+                print("🚨 Check data loading scripts and database connection!")
+            else:
+                print(f"✅ Orthodox texts: {orthodox_count} (OK)")
+                
+        finally:
+            db.close()
+        
         print("✅ Initialization completed successfully!")
         
     except Exception as e:
