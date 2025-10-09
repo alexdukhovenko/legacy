@@ -40,7 +40,7 @@ def test_api_key():
         
         # Простой тест
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[{"role": "user", "content": "Привет"}],
             max_tokens=10
         )
