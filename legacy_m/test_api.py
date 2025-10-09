@@ -28,8 +28,7 @@ def test_openai_api():
             messages=[
                 {"role": "user", "content": "Привет! Это тест API."}
             ],
-            reasoning={"effort": "minimal"},
-            text={"verbosity": "low"}
+            max_tokens=50
         )
         
         print("✅ OpenAI API работает!")

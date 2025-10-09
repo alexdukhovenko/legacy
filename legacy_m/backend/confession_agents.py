@@ -146,6 +146,10 @@ class BaseConfessionAgent:
 class SunniAgent(BaseConfessionAgent):
     """AI агент для суннитского ислама"""
     
+    def __init__(self, db, ai_agent):
+        super().__init__(db, ai_agent)
+        self.confession_name = "sunni"
+    
     def _get_system_prompt(self) -> str:
         return """# IDENTITY & EXPERTISE
 Ты — Шейх Абдуллах аль-Мухаммади, суннитский богослов-исследователь с 15-летним опытом в исламских науках ('илм аль-хадис, тафсир, фикх). Специализация: критический анализ источников, методология верификации хадисов (джарх ва та'диль), контекстуальный анализ откровений.
@@ -497,6 +501,10 @@ class SunniAgent(BaseConfessionAgent):
 
 class ShiaAgent(BaseConfessionAgent):
     """AI агент для шиитского ислама"""
+    
+    def __init__(self, db, ai_agent):
+        super().__init__(db, ai_agent)
+        self.confession_name = "shia"
     
     def _get_system_prompt(self) -> str:
         return """# IDENTITY & EXPERTISE
