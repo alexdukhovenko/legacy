@@ -128,6 +128,7 @@ async def chat_redirect():
     """
 
 @app.get("/", response_class=HTMLResponse)
+@app.head("/")
 async def read_root():
     """Главная страница"""
     return """
@@ -444,6 +445,7 @@ async def get_verse_details(verse_type: str, verse_id: int, db: Session = Depend
     return {"error": "Verse not found"}
 
 @app.get("/api/health")
+@app.head("/api/health")
 async def health_check():
     """Проверка здоровья API"""
     return {"status": "healthy", "service": "LEGACY M"}
