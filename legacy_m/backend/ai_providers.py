@@ -62,11 +62,15 @@ class AnthropicProvider(AIProvider):
     def __init__(self):
         try:
             import anthropic
+            anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+            if not anthropic_key:
+                raise Exception("ANTHROPIC_API_KEY не найден")
             # Используем новую версию API
-            self.client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+            self.client = anthropic.Anthropic(api_key=anthropic_key)
             self.available = True
+            logger.info("✅ Anthropic Claude инициализирован успешно")
         except Exception as e:
-            logger.error(f"Anthropic недоступен: {e}")
+            logger.error(f"❌ Anthropic недоступен: {e}")
             self.available = False
     
     def generate_response(self, messages: List[Dict[str, str]], max_tokens: int = 800) -> str:
@@ -85,7 +89,7 @@ class AnthropicProvider(AIProvider):
                     user_msg = msg["content"]
             
             response = self.client.messages.create(
-                model="claude-3-5-sonnet-20241022",
+                model="claude-3-haiku-20240307",
                 max_tokens=max_tokens,
                 system=system_msg,
                 messages=[{"role": "user", "content": user_msg}]

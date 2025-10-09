@@ -380,8 +380,8 @@ class SunniAgent(BaseConfessionAgent):
             # Перепроверяем ответ
             verification = self.verify_response(question, response_text, relevant_texts)
             
-            # Если достоверность низкая, возвращаем осторожный ответ
-            if verification['confidence'] < 0.7:
+            # Если достоверность низкая, но у нас есть источники - используем ответ AI
+            if verification['confidence'] < 0.3 and not relevant_texts:
                 response_text = f"В суннитских источниках есть информация по этому вопросу, но для полного ответа рекомендую обратиться к знающему духовнику.\n\nПриложение: Этот вопрос требует глубокого изучения священных текстов и консультации с духовным наставником."
             
             return {
@@ -716,8 +716,8 @@ class ShiaAgent(BaseConfessionAgent):
             # Перепроверяем ответ
             verification = self.verify_response(question, response_text, relevant_texts)
             
-            # Если достоверность низкая, возвращаем осторожный ответ
-            if verification['confidence'] < 0.7:
+            # Если достоверность низкая, но у нас есть источники - используем ответ AI
+            if verification['confidence'] < 0.3 and not relevant_texts:
                 response_text = f"В шиитских источниках есть информация по этому вопросу, но для полного ответа рекомендую обратиться к знающему духовнику.\n\nПриложение: Этот вопрос требует глубокого изучения священных текстов и консультации с духовным наставником."
             
             return {

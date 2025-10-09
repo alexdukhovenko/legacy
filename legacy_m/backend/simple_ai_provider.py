@@ -36,7 +36,12 @@ class SimpleAIProvider:
         try:
             # Пробуем ANTHROPIC CLAUDE-3.5-SONNET
             import anthropic
-            client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+            
+            anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+            if not anthropic_key:
+                raise Exception("ANTHROPIC_API_KEY не найден")
+            
+            client = anthropic.Anthropic(api_key=anthropic_key)
             
             # Конвертируем сообщения для Claude
             system_msg = ""
@@ -49,7 +54,7 @@ class SimpleAIProvider:
                     user_msg = msg["content"]
             
             response = client.messages.create(
-                model="claude-3-5-sonnet-20241022",
+                model="claude-3-haiku-20240307",
                 max_tokens=max_tokens,
                 system=system_msg,
                 messages=[{"role": "user", "content": user_msg}]
