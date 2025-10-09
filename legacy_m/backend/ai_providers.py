@@ -36,8 +36,10 @@ class OpenAIProvider(AIProvider):
             response = self.client.chat.completions.create(
                 model="gpt-5",
                 messages=messages,
-                max_completion_tokens=max_tokens,
-                temperature=0.3
+                max_output_tokens=max_tokens,
+                temperature=0.3,
+                reasoning_effort="medium",
+                verbosity="medium"
             )
             return response.choices[0].message.content.strip()
         except Exception as e:

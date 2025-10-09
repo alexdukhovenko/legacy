@@ -42,7 +42,7 @@ def test_api_key():
         response = client.chat.completions.create(
             model="gpt-5",
             messages=[{"role": "user", "content": "Привет"}],
-            max_completion_tokens=10
+            max_output_tokens=10
         )
         
         logger.info("✅ OpenAI API работает!")

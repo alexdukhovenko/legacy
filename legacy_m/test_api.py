@@ -28,7 +28,7 @@ def test_openai_api():
             messages=[
                 {"role": "user", "content": "Привет! Это тест API."}
             ],
-            max_completion_tokens=50
+            max_output_tokens=50
         )
         
         print("✅ OpenAI API работает!")

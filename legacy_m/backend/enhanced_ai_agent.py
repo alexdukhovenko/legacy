@@ -315,7 +315,7 @@ class EnhancedAIAgent:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                max_completion_tokens=400,
+                max_output_tokens=400,
                 temperature=0.3
             )
             
