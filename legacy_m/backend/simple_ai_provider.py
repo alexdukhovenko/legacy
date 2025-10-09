@@ -37,10 +37,8 @@ class SimpleAIProvider:
             response = self.client.chat.completions.create(
                 model="gpt-5",
                 messages=messages,
-                max_output_tokens=max_tokens,
-                temperature=0.3,
-                reasoning_effort="medium",
-                verbosity="medium"
+                max_tokens=max_tokens,
+                temperature=0.3
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
