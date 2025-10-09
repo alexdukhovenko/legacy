@@ -924,10 +924,12 @@ class OrthodoxAgent(BaseConfessionAgent):
         results = []
         
         # Добавляем православные тексты
-        for text in orthodox_query.limit(limit * 20):  # Берем еще больше для лучшего отбора
+        logger.info(f"🔍 OrthodoxAgent: Проверяем {limit * 50} православных текстов")
+        for text in orthodox_query.limit(limit * 50):  # Берем еще больше для лучшего отбора
             # Используем основной алгоритм поиска для православия
             score = self._calculate_similarity_score(question, text.translation_ru or "")
-            if score > 0.01:  # УЛЬТРА низкий порог - находим ВСЕ
+            logger.info(f"📖 OrthodoxAgent: Текст '{text.book_name}' - score: {score}")
+            if score > 0.001:  # УЛЬТРА-УЛЬТРА низкий порог - находим ВСЕ
                 results.append({
                     'type': 'orthodox',
                     'text': text.translation_ru or text.original_text or "",
@@ -950,7 +952,7 @@ class OrthodoxAgent(BaseConfessionAgent):
         # Если не нашли релевантных текстов, берем любые православные тексты
         if not results:
             logger.info("Не найдено релевантных православных текстов, используем fallback")
-            for text in orthodox_query.limit(10):
+            for text in orthodox_query.limit(20):
                 results.append({
                     'type': 'orthodox',
                     'text': text.translation_ru or text.original_text or "",
