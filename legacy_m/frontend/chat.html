@@ -1,732 +1,114 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Чат - LEGACY M</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            color: #2c3e50;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        /* Header */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 0.5rem 2rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .header-title {
-            flex: 1;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 1.8rem;
-            color: #2c3e50;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .header p {
-            font-size: 0.9rem;
-            color: #2c3e50;
-            margin: 0;
-            opacity: 0.8;
-        }
-
-        .back-button {
-            background: #8b7355;
-            color: #ffffff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: #6b5b47;
-            transform: scale(1.05);
-        }
-
-        .confession-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .confession-icon {
-            font-size: 2rem;
-        }
-
-        .confession-details h3 {
-            color: #2c3e50;
-            font-size: 1.2rem;
-            margin: 0;
-        }
-
-        .confession-details p {
-            color: #2c3e50;
-            font-size: 0.9rem;
-            margin: 0;
-            opacity: 0.8;
-        }
-
-        .auth-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-name {
-            color: #2c3e50;
-            font-weight: 500;
-        }
-
-        .auth-button {
-            padding: 8px 16px;
-            background: #8b7355;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .auth-button:hover {
-            background: #6b5b47;
-            transform: scale(1.05);
-        }
-
-        /* Chat Container */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .message {
-            display: flex;
-            gap: 1rem;
-            max-width: 80%;
-            animation: fadeInUp 0.3s ease-out;
-        }
-
-        .message.user-message {
-            align-self: flex-end;
-            flex-direction: row-reverse;
-        }
-
-        .message.ai-message {
-            align-self: flex-start;
-        }
-
-        .message-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .user-message .message-avatar {
-            background: #8b7355;
-            color: #ffffff;
-        }
-
-        .ai-message .message-avatar {
-            background: rgba(139, 115, 85, 0.2);
-            color: #8b7355;
-        }
-
-        .message-content {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1rem 1.5rem;
-            border-radius: 15px;
-            border: 1px solid rgba(139, 115, 85, 0.2);
-            line-height: 1.6;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-message .message-content {
-            background: rgba(139, 115, 85, 0.1);
-            border-color: rgba(52, 152, 219, 0.3);
-        }
-
-        .ai-message .message-content {
-            border: 1px solid rgba(139, 115, 85, 0.2);
-        }
-
-        .message-sources {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(52, 152, 219, 0.2);
-        }
-
-        .source-link {
-            display: inline-block;
-            background: rgba(139, 115, 85, 0.2);
-            color: #8b7355;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 0.8rem;
-            margin: 0.25rem 0.25rem 0.25rem 0;
-            transition: all 0.3s ease;
-        }
-
-        .source-link:hover {
-            background: rgba(139, 115, 85, 0.3);
-            transform: scale(1.05);
-        }
-
-        /* Chat Input */
-        .chat-input-container {
-            padding: 1rem 2rem;
-            background: rgba(255, 255, 255, 0.9);
-            border-top: 2px solid rgba(52, 152, 219, 0.3);
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .chat-input-wrapper {
-            display: flex;
-            gap: 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .chat-input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid rgba(139, 115, 85, 0.3);
-            border-radius: 25px;
-            padding: 1rem 1.5rem;
-            color: #2c3e50;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        .chat-input:focus {
-            outline: none;
-            border-color: #8b7355;
-            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.2);
-        }
-
-        .chat-input::placeholder {
-            color: rgba(44, 62, 80, 0.5);
-        }
-
-        .send-button {
-            background: #8b7355;
-            color: #ffffff;
-            border: none;
-            border-radius: 25px;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-
-        .send-button:hover {
-            background: #6b5b47;
-            transform: scale(1.05);
-        }
-
-        .send-button:disabled {
-            background: rgba(139, 115, 85, 0.3);
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Loading */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 1rem;
-            color: #8b7355;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        /* Welcome Message */
-        .welcome-message {
-            text-align: center;
-            padding: 2rem;
-            color: #2c3e50;
-        }
-
-        .welcome-message h2 {
-            color: #2c3e50;
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .welcome-message p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                padding: 1rem;
-            }
-            
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            
-            .chat-messages {
-                padding: 1rem;
-            }
-            
-            .chat-input-container {
-                padding: 1rem;
-            }
-            
-            .message {
-                max-width: 95%;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>НАСЛЕДИЕ — Чат</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/styles_unified.css">
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <button class="back-button" onclick="goBack()">← Назад</button>
-                
-                <div class="header-title">
-                    <h1>LEGACY M</h1>
-                    <p>Цифровая платформа духовного общения</p>
-                </div>
-                
-                <div class="confession-info" id="confessionInfo" style="display: none;">
-                    <div class="confession-icon" id="confessionIcon"></div>
-                    <div class="confession-details">
-                        <h3 id="confessionTitle"></h3>
-                        <p id="confessionDescription"></p>
-                    </div>
-                </div>
-                
-                <div class="auth-section">
-                    <div id="auth-buttons" class="auth-buttons" style="display: none;">
-                        <a href="/frontend/auth.html" class="auth-button">Войти</a>
-                        <a href="/frontend/auth.html" class="auth-button">Регистрация</a>
-                    </div>
-                    <div id="user-info" class="user-info" style="display: none;">
-                        <span class="user-name" id="user-name"></span>
-                        <button class="auth-button" onclick="logout()">Выйти</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="/frontend/index.html">
+        <span class="brand-logo" aria-hidden="true"></span>
+        <span class="brand-name">НАСЛЕДИЕ</span>
+      </a>
+      <div class="nav-actions">
+        <a class="btn btn-ghost" href="/frontend/auth.html">Войти</a>
+        <a class="btn btn-primary" href="/frontend/auth.html">Регистрация</a>
+      </div>
+    </div>
+  </header>
 
-        <!-- Chat Container -->
-        <div class="chat-container">
-            <div id="welcomeMessage" class="welcome-message">
-                <h2>Добро пожаловать в чат!</h2>
-                <p>Выберите конфессию для начала общения с ИИ-наставником</p>
-            </div>
-            
-            <div id="chatMessages" class="chat-messages" style="display: none;">
-                <!-- Сообщения будут добавляться здесь -->
-            </div>
-            
-            <div class="chat-input-container" id="chatInputContainer" style="display: none;">
-                <div class="chat-input-wrapper">
-                    <input type="text" id="chatInput" class="chat-input" placeholder="Задайте вопрос ИИ-помощнику..." autocomplete="off">
-                    <button id="sendButton" class="send-button" onclick="sendMessage()">Отправить</button>
-                </div>
-                <div id="loading" class="loading">ИИ-помощник печатает...</div>
-            </div>
+  <main class="container">
+    <div class="card chat-wrap" id="chat">
+      <div class="chat-header">
+        <div class="badge orthodox"><i></i> Православие</div>
+        <div class="mute">ИИ-наставник</div>
+      </div>
+
+      <div class="chat-stream" id="chat-stream" aria-live="polite" aria-busy="false">
+        <!-- сообщения рендерите сюда -->
+        <!-- пример: -->
+        <div class="msg assistant">
+          <div class="meta">Наставник • сейчас</div>
+          Здравствуйте! Чем могу помочь?
         </div>
+      </div>
+
+      <div class="chat-composer">
+        <div class="input">
+          <span class="chip">/orthodox</span>
+          <textarea id="message" placeholder="Задайте вопрос…" rows="1"></textarea>
+        </div>
+        <button class="btn btn-primary" id="send">Отправить</button>
+      </div>
     </div>
 
-    <script>
-        let currentUser = null;
-        let currentConfession = null;
+    <div class="center spacer">
+      <div id="typing" class="typing hidden"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    </div>
+  </main>
 
-        // Проверка аутентификации при загрузке страницы
-        window.addEventListener('load', async () => {
-            const isAuthenticated = await checkAuth();
-            if (isAuthenticated) {
-                // Получаем конфессию из URL параметров
-                const urlParams = new URLSearchParams(window.location.search);
-                const confession = urlParams.get('confession');
-                
-                if (confession && ['sunni', 'shia', 'orthodox'].includes(confession)) {
-                    startChat(confession);
-                } else {
-                    // Если нет конфессии, показываем сообщение
-                    document.getElementById('welcomeMessage').innerHTML = `
-                        <h2>Выберите конфессию</h2>
-                        <p>Для начала общения необходимо выбрать конфессию</p>
-                        <div style="margin-top: 2rem;">
-                            <a href="/frontend/index.html" class="auth-button">Вернуться к выбору</a>
-                        </div>
-                    `;
-                }
-            }
-        });
+  <script>
+    const textarea = document.getElementById('message');
+    const stream = document.getElementById('chat-stream');
+    const typing = document.getElementById('typing');
+    const sendBtn = document.getElementById('send');
 
-        // ===== СИСТЕМА АУТЕНТИФИКАЦИИ =====
-        
-        function getAuthToken() {
-            return localStorage.getItem('auth_token');
-        }
+    // Авто-рост textarea
+    textarea.addEventListener('input', () => {
+      textarea.style.height = 'auto';
+      textarea.style.height = Math.min(textarea.scrollHeight, 180) + 'px';
+    });
 
-        function saveAuthToken(token) {
-            localStorage.setItem('auth_token', token);
-        }
+    // Пример работы индикатора «печатает…»
+    function showTyping(on=true){
+      typing.classList.toggle('hidden', !on);
+      stream.setAttribute('aria-busy', on ? 'true' : 'false');
+    }
 
-        function removeAuthToken() {
-            localStorage.removeItem('auth_token');
-        }
+    // Автоскролл вниз
+    function scrollToBottom(){
+      stream.scrollTo({ top: stream.scrollHeight, behavior: 'smooth' });
+    }
 
-        async function checkAuth() {
-            const token = getAuthToken();
-            if (!token) {
-                showAuthButtons();
-                return false;
-            }
+    // Заглушка отправки (впаяйте ваш /api/chat)
+    sendBtn.addEventListener('click', async () => {
+      const text = textarea.value.trim();
+      if(!text) return;
+      // Рендерим юзер-сообщение
+      stream.insertAdjacentHTML('beforeend', `
+        <div class="msg user"><div class="meta">Вы • сейчас</div>${escapeHtml(text)}</div>
+      `);
+      textarea.value = ''; textarea.dispatchEvent(new Event('input'));
+      scrollToBottom();
+      showTyping(true);
 
-            try {
-                const response = await fetch('/api/auth/me', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+      try {
+        // TODO: замените на ваш вызов API
+        const reply = await fakeCall(text);
+        stream.insertAdjacentHTML('beforeend', `
+          <div class="msg assistant">
+            <div class="meta">Наставник • сейчас</div>${escapeHtml(reply.text)}
+            ${renderSources(reply.sources)}
+          </div>`);
+      } catch(e){
+        stream.insertAdjacentHTML('beforeend', `<div class="msg assistant"><div class="meta">Система</div>Произошла ошибка. Попробуйте ещё раз.</div>`);
+      } finally {
+        showTyping(false); scrollToBottom();
+      }
+    });
 
-                if (response.ok) {
-                    const userData = await response.json();
-                    currentUser = userData;
-                    showUserInfo(userData);
-                    return true;
-                } else {
-                    console.log('Auth check failed:', response.status, response.statusText);
-                    removeAuthToken();
-                    showAuthButtons();
-                    return false;
-                }
-            } catch (error) {
-                console.error('Auth check error:', error);
-                removeAuthToken();
-                showAuthButtons();
-                return false;
-            }
-        }
-
-        function showAuthButtons() {
-            document.getElementById('auth-buttons').style.display = 'flex';
-            document.getElementById('user-info').style.display = 'none';
-        }
-
-        function showUserInfo(userData) {
-            document.getElementById('auth-buttons').style.display = 'none';
-            document.getElementById('user-info').style.display = 'flex';
-            document.getElementById('user-name').textContent = userData.name || userData.username;
-        }
-
-        async function logout() {
-            const token = getAuthToken();
-            if (!token) return;
-
-            try {
-                await fetch('/api/auth/logout', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-            } catch (error) {
-                console.error('Logout error:', error);
-            } finally {
-                removeAuthToken();
-                showAuthButtons();
-                window.location.href = '/frontend/landing.html';
-            }
-        }
-
-        // ===== ЧАТ =====
-
-        function startChat(confession) {
-            currentConfession = confession;
-            
-            // Настраиваем информацию о конфессии
-            const confessionData = {
-                sunni: {
-                    icon: '🕌',
-                    title: 'Суннизм',
-                    description: 'Исламский помощник суннитской традиции'
-                },
-                shia: {
-                    icon: '🕋',
-                    title: 'Шиизм',
-                    description: 'Исламский помощник шиитской традиции'
-                },
-                orthodox: {
-                    icon: '⛪',
-                    title: 'Православие',
-                    description: 'Христианский помощник православной традиции'
-                }
-            };
-
-            const data = confessionData[confession];
-            document.getElementById('confessionIcon').textContent = data.icon;
-            document.getElementById('confessionTitle').textContent = data.title;
-            document.getElementById('confessionDescription').textContent = data.description;
-            document.getElementById('confessionInfo').style.display = 'flex';
-
-            // Показываем чат
-            document.getElementById('welcomeMessage').style.display = 'none';
-            document.getElementById('chatMessages').style.display = 'flex';
-            document.getElementById('chatInputContainer').style.display = 'block';
-
-            // Загружаем историю чата
-            loadChatHistory();
-        }
-
-        async function loadChatHistory() {
-            if (!currentUser || !currentConfession) return;
-
-            try {
-                const response = await fetch(`/api/user/${currentUser.id}/chat/${currentConfession}`, {
-                    headers: {
-                        'Authorization': `Bearer ${getAuthToken()}`
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    displayChatHistory(data.messages);
-                }
-            } catch (error) {
-                console.error('Error loading chat history:', error);
-            }
-        }
-
-        function displayChatHistory(messages) {
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML = '';
-            
-            messages.forEach(message => {
-                addMessage(message.content, message.type, message.sources);
-            });
-        }
-
-        function addMessage(content, type, sources = null) {
-            const chatMessages = document.getElementById('chatMessages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}-message`;
-            
-            const avatar = type === 'user' ? '👤' : '🤖';
-            
-            let sourcesHtml = '';
-            if (sources && sources.length > 0) {
-                sourcesHtml = '<div class="message-sources">';
-                sources.forEach(source => {
-                    const sourceId = source.id || source.content?.id || '';
-                    const sourceName = getSourceDisplayName(source);
-                    sourcesHtml += `<a href="#" class="source-link" onclick="showSource('${source.type}', '${sourceId}')">${sourceName}</a>`;
-                });
-                sourcesHtml += '</div>';
-            }
-            
-            messageDiv.innerHTML = `
-                <div class="message-avatar">${avatar}</div>
-                <div class="message-content">
-                    ${content.replace(/\n/g, '<br>')}
-                    ${sourcesHtml}
-                </div>
-            `;
-            
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        async function sendMessage() {
-            const token = getAuthToken();
-            if (!token) {
-                alert('Необходимо войти в систему');
-                return;
-            }
-
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
-
-            // Добавляем сообщение пользователя
-            addMessage(message, 'user');
-            input.value = '';
-
-            // Показываем загрузку
-            showLoading();
-
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        confession: currentConfession
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    addMessage(data.response, 'ai', data.sources);
-                } else {
-                    if (response.status === 401) {
-                        removeAuthToken();
-                        showAuthButtons();
-                        alert('Сессия истекла. Пожалуйста, войдите заново.');
-                        window.location.href = '/frontend/auth.html';
-                    } else {
-                        addMessage('Извините, произошла ошибка. Попробуйте еще раз.', 'ai');
-                    }
-                }
-            } catch (error) {
-                console.error('Error sending message:', error);
-                addMessage('Извините, произошла ошибка соединения.', 'ai');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        function showLoading() {
-            document.getElementById('loading').classList.add('show');
-            document.getElementById('sendButton').disabled = true;
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').classList.remove('show');
-            document.getElementById('sendButton').disabled = false;
-        }
-
-        function getSourceTypeName(type) {
-            const names = {
-                'quran': 'Коран',
-                'hadith': 'Хадис',
-                'orthodox': 'Православие'
-            };
-            return names[type] || type;
-        }
-
-        function getSourceDisplayName(source) {
-            const typeName = getSourceTypeName(source.type);
-            
-            if (source.type === 'quran' && source.content) {
-                const surah = source.content.surah_number || '';
-                const verse = source.content.verse_number || '';
-                return `${typeName} ${surah}:${verse}`;
-            } else if (source.type === 'hadith' && source.content) {
-                const collection = source.content.collection || '';
-                const number = source.content.hadith_number || source.content.number || '';
-                return `${typeName} ${collection} ${number}`;
-            } else if (source.type === 'orthodox' && source.content) {
-                const book = source.content.book_name || '';
-                const author = source.content.author || '';
-                return `${typeName} ${author} ${book}`;
-            }
-            
-            return typeName;
-        }
-
-        function showSource(type, id) {
-            alert(`Источник: ${getSourceTypeName(type)} #${id}`);
-        }
-
-        function goBack() {
-            window.location.href = '/frontend/index.html';
-        }
-
-        // Обработчики событий
-        document.getElementById('chatInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-    </script>
+    function renderSources(sources=[]){
+      if(!sources.length) return '';
+      const lis = sources.map(s => `<li>${escapeHtml(s.title)} — <span class="mute">${escapeHtml(s.ref)}</span></li>`).join('');
+      return `<div class="sources"><strong>Источники:</strong><ul>${lis}</ul></div>`;
+    }
+    function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]))}
+    async function fakeCall(q){ return new Promise(r=>setTimeout(()=>r({ text:"Принято. Формирую ответ…", sources:[] }), 600)) }
+  </script>
 </body>
 </html>
