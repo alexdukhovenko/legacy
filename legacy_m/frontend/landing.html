@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>НАСЛЕДИЕ — Цифровая платформа духовного наставничества</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/frontend/styles_unified.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/styles_unified.css?v=2">
 </head>
 <body>
   <header class="nav">
@@ -22,45 +22,56 @@
     </div>
   </header>
 
-  <main class="container">
-    <div class="center" style="margin: 4rem 0;">
+  <section class="hero container">
+    <div class="kicker">цифровая платформа духовного наставничества</div>
+    <div class="title">
       <h1>НАСЛЕДИЕ</h1>
-      <h2>Цифровая платформа духовного наставничества</h2>
-      <p>Получите мудрые советы и духовное руководство на основе священных текстов трех великих традиций</p>
-      
-      <div class="center spacer">
-        <a href="/frontend/index.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">
-          Начать общение
-        </a>
+      <h1 class="accent">— собеседник с ИИ</h1>
+    </div>
+    <p class="subtitle">Три конфессии • проверенные источники • бережная подача. Выберите традицию, чтобы начать беседу.</p>
+    
+    <div class="center spacer">
+      <a href="/frontend/index.html" class="btn btn-primary" style="font-size: 1.1rem; padding: 12px 24px;">
+        Начать общение
+      </a>
+    </div>
+  </section>
+
+  <div class="grid container">
+    <div class="col-4">
+      <div class="card">
+        <h3>🕌 Суннизм</h3>
+        <p>Исламский помощник на основе Корана и хадисов суннитской традиции</p>
       </div>
     </div>
-
-    <div class="grid">
-      <div class="col-4">
-        <div class="card">
-          <h3>🕌 Суннизм</h3>
-          <p>Исламский помощник на основе Корана и хадисов суннитской традиции</p>
-        </div>
-      </div>
-      
-      <div class="col-4">
-        <div class="card">
-          <h3>🕋 Шиизм</h3>
-          <p>Исламский помощник на основе Корана и сборника Аль-Кафи</p>
-        </div>
-      </div>
-      
-      <div class="col-4">
-        <div class="card">
-          <h3>⛪ Православие</h3>
-          <p>Христианский помощник на основе Библии и святоотеческих трудов</p>
-        </div>
+    
+    <div class="col-4">
+      <div class="card">
+        <h3>🕋 Шиизм</h3>
+        <p>Исламский помощник на основе Корана и сборника Аль-Кафи</p>
       </div>
     </div>
-  </main>
+    
+    <div class="col-4">
+      <div class="card">
+        <h3>⛪ Православие</h3>
+        <p>Христианский помощник на основе Библии и святоотеческих трудов</p>
+      </div>
+    </div>
+  </div>
 
-  <footer class="center" style="margin: 4rem 0 2rem; color: var(--text-secondary);">
+  <footer class="center" style="margin: 4rem 0 2rem; color: var(--ink-2);">
     <p>&copy; 2024 НАСЛЕДИЕ. Все права защищены.</p>
   </footer>
+
+  <div id="toast" class="toast"></div>
+  <script>
+    function showToast(msg, kind='gold'){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = 'toast ' + kind;
+      requestAnimationFrame(()=>{ t.classList.add('show'); });
+      setTimeout(()=> t.classList.remove('show'), 2600);
+    }
+  </script>
 </body>
 </html>

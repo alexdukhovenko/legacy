@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>НАСЛЕДИЕ — Чат</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/frontend/styles_unified.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/styles_unified.css?v=2">
 </head>
 <body>
   <header class="nav">
@@ -52,7 +52,15 @@
     </div>
   </main>
 
+  <div id="toast" class="toast"></div>
   <script>
+    function showToast(msg, kind='gold'){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = 'toast ' + kind;
+      requestAnimationFrame(()=>{ t.classList.add('show'); });
+      setTimeout(()=> t.classList.remove('show'), 2600);
+    }
+
     const textarea = document.getElementById('message');
     const stream = document.getElementById('chat-stream');
     const typing = document.getElementById('typing');
@@ -97,6 +105,7 @@
           </div>`);
       } catch(e){
         stream.insertAdjacentHTML('beforeend', `<div class="msg assistant"><div class="meta">Система</div>Произошла ошибка. Попробуйте ещё раз.</div>`);
+        showToast('Произошла ошибка. Попробуйте ещё раз.');
       } finally {
         showTyping(false); scrollToBottom();
       }

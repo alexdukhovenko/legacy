@@ -1,162 +1,146 @@
-/* === Design System: НАСЛЕДИЕ =============================== */
-:root{
-  --primary-brown:#8B7355;
-  --accent-gold:#D4AF37;
-  --text-primary:#2C3E50;
-  --text-secondary:#5C6E7E;
-  --bg-primary:#FFFFFF;
-  --bg-secondary:#F8F9FA;
-  --neutral-light:#ECF0F1;
-  --neutral-medium:#BDC3C7;
+/* ============ НАСЛЕДИЕ • Theme v2: Neo-Byzantium ============ */
 
-  --radius:12px;
-  --shadow:0 8px 24px rgba(0,0,0,.08);
-  --shadow-sm:0 4px 12px rgba(0,0,0,.06);
+/* Palette */
+:root{
+  --ink:#10141C;                 /* основной текст (почти чёрный) */
+  --ink-2:#2A3442;               /* вторичный текст */
+  --indigo:#0F2233;              /* базовый фон/интерактив */
+  --indigo-2:#1A3247;            /* hover/глубина */
+  --gold:#C8A24A;                /* акцент (золото) */
+  --parchment:#FAF7F1;           /* тёплый светлый фон */
+  --card:#FFFFFF;
+  --line:#E8E2D8;
+
+  --radius:16px;
+  --shadow:0 10px 30px rgba(15,34,51,.10);
+  --shadow-sm:0 6px 18px rgba(15,34,51,.08);
 }
 
-/* Base */
+/* Reset / base */
 *{box-sizing:border-box}
 html,body{height:100%}
-html{scroll-behavior:smooth}
 body{
-  margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  color:var(--text-primary); background:linear-gradient(180deg,#fff 0%,#faf8f4 100%);
+  margin:0;
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 80% -200px, rgba(200,162,74,.16), transparent 60%),
+    linear-gradient(180deg, #fff 0%, var(--parchment) 100%);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
 
-/* Typography */
-h1,h2,h3{line-height:1.2;margin:0 0 .5rem}
-h1{font-weight:700;font-size:clamp(28px,3vw,40px)}
-h2{font-weight:600;font-size:clamp(22px,2.2vw,28px)}
-h3{font-weight:600;font-size:clamp(18px,1.8vw,22px)}
-p{margin:.5rem 0 1rem;color:var(--text-secondary)}
+/* Headings — антиква для торжественности */
+@font-face{
+  font-family:"Legacy Display";
+  src: local("Cormorant Garamond Semibold"), local("CormorantGaramond-SemiBold");
+  font-weight:600; font-style:normal; font-display:swap;
+}
+h1,h2,h3{font-family:"Legacy Display", "Cormorant Garamond", serif; letter-spacing:.2px; margin:.2rem 0 .6rem; line-height:1.15}
+h1{font-size:clamp(32px,4vw,56px); font-weight:600}
+h2{font-size:clamp(24px,3vw,36px); font-weight:600}
+h3{font-size:clamp(18px,2vw,24px); font-weight:600}
+p{color:var(--ink-2); margin:.3rem 0 1rem}
 
 /* Layout */
-.container{
-  max-width:1100px; margin:0 auto; padding:24px; width:100%;
-}
+.container{max-width:1160px; margin:0 auto; padding:24px}
 .card{
-  background:var(--bg-primary); border-radius:var(--radius);
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
   box-shadow:var(--shadow); padding:20px;
-  border:1px solid #eee;
 }
 
-/* Header / Navbar */
-.nav{
-  position:sticky; top:0; z-index:50;
-  background:rgba(255,255,255,.8); backdrop-filter:saturate(180%) blur(8px);
-  border-bottom:1px solid #eee;
+/* NAV */
+.nav{position:sticky; top:0; z-index:50; background:rgba(255,255,255,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1160px; margin:0 auto; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px}
+.brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink)}
+.brand-logo{width:34px;height:34px;border-radius:999px;background:
+  radial-gradient(60% 60% at 30% 30%, #EED79A 0%, var(--gold) 60%, #9c7b2c 100%);
+  box-shadow: inset 0 0 0 2px #fff, 0 4px 10px rgba(0,0,0,.15);
 }
-.nav-inner{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:16px; padding:12px 20px; max-width:1100px; margin:0 auto;
-}
-.brand{
-  display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text-primary);
-}
-.brand-logo{
-  width:32px;height:32px; border-radius:999px;
-  background: radial-gradient(circle at 30% 30%, var(--accent-gold), #b98d1e);
-  box-shadow: inset 0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,.1);
-}
-.brand-name{font-weight:700; letter-spacing:.4px}
-.nav-actions{display:flex; align-items:center; gap:8px}
+.brand-name{font-family:"Legacy Display","Cormorant Garamond",serif; font-weight:600; letter-spacing:.4px}
 
 /* Buttons */
-.btn{
-  appearance:none; border:0; cursor:pointer;
-  padding:10px 14px; border-radius:10px; font-weight:600;
-  background:var(--neutral-light); color:var(--text-primary);
-  box-shadow:var(--shadow-sm); transition:.2s ease;
-}
+.btn{appearance:none;border:0;cursor:pointer; padding:10px 14px;border-radius:12px;font-weight:600; box-shadow:var(--shadow-sm); transition:transform .15s ease, box-shadow .15s ease}
 .btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn-ghost{background:#fff; border:1px solid var(--line); color:var(--ink)}
 .btn-primary{
-  background:linear-gradient(180deg, var(--accent-gold) 0%, #b98d1e 100%);
-  color:#1f2a37;
-}
-.btn-ghost{
-  background:transparent; border:1px solid var(--neutral-medium);
-}
-.btn-outline{
-  background:#fff; border:1px solid var(--accent-gold); color:#6b520f;
+  color:#111; background:linear-gradient(180deg, #EED79A 0%, var(--gold) 90%);
+  border:1px solid #b7943f;
 }
 
-/* Confession badges */
-.badge{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:8px 10px; border-radius:999px; font-weight:600; font-size:12px;
-  border:1px solid #eee; background:#fff;
-}
-.badge i{width:8px;height:8px;border-radius:999px}
-.badge.orthodox i{background:#375a7f}
-.badge.sunni i{background:#1b7f5a}
-.badge.shia i{background:#7f1b47}
+/* HERO */
+.hero{padding:48px 0 8px}
+.hero .kicker{color:#7c8898; font-weight:600; letter-spacing:.12em; text-transform:uppercase; font-size:12px}
+.hero .title{display:flex; gap:12px; align-items:baseline; flex-wrap:wrap}
+.hero .title .accent{color:var(--indigo); border-bottom:3px solid var(--gold)}
+.hero .subtitle{max-width:760px}
 
-/* Grid cards (landing & index) */
-.grid{
-  display:grid; gap:16px;
-  grid-template-columns:repeat(12,1fr);
-}
+/* Grid */
+.grid{display:grid; gap:18px; grid-template-columns:repeat(12,1fr)}
 .col-4{grid-column:span 4}
-@media (max-width:960px){ .col-4{grid-column:span 6} }
-@media (max-width:640px){ .col-4{grid-column:span 12} }
+@media (max-width:960px){.col-4{grid-column:span 6}}
+@media (max-width:640px){.col-4{grid-column:span 12}}
 
-.card-conf{
-  position:relative; overflow:hidden; padding:18px; min-height:140px;
-  display:flex; flex-direction:column; gap:8px; justify-content:space-between;
+/* Confession cards */
+.card-conf{position:relative; overflow:hidden; padding:18px; min-height:150px; display:flex; flex-direction:column; gap:10px; justify-content:space-between}
+.card-conf::after{
+  content:""; position:absolute; inset:-1px; border-radius:calc(var(--radius) + 2px);
+  background:conic-gradient(from 140deg, rgba(200,162,74,.18), transparent 30%, transparent 70%, rgba(15,34,51,.10));
+  filter:blur(12px); opacity:.35; pointer-events:none;
 }
-.card-conf:hover{transform:translateY(-2px); transition:transform .2s ease}
 .card-conf .title{font-weight:700}
-.card-conf .desc{color:var(--text-secondary); font-size:14px}
+.card-conf .desc{color:var(--ink-2); font-size:14px}
+.pill{
+  display:inline-flex; align-items:center; gap:10px;
+  background:#fff; border:1px solid var(--line); border-radius:999px; padding:8px 10px; font-weight:600; font-size:12px
+}
+.pill .dot{width:8px;height:8px;border-radius:999px}
+.dot-orth{background:#375a7f}.dot-sunni{background:#1b7f5a}.dot-shia{background:#7f1b47}
 
-/* Chat Layout */
-.chat-wrap{display:grid; grid-template-rows:auto 1fr auto; height:calc(100dvh - 64px)}
-.chat-header{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  padding:12px 16px; border-bottom:1px solid #eee; background:#fff;
-}
-.chat-stream{
-  overflow:auto; padding:18px; background:var(--bg-secondary);
-}
+/* Chat */
+.chat-wrap{display:grid; grid-template-rows:auto 1fr auto; height:calc(100dvh - 72px)}
+.chat-header{display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--line)}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:12px}
+.chat-stream{overflow:auto; padding:20px; background:linear-gradient(180deg, #fff 0%, #fbfaf6 100%)}
 .msg{
-  max-width:min(700px, 90%); margin:10px 0; padding:12px 14px;
-  border-radius:14px; box-shadow:var(--shadow-sm); border:1px solid #e9e9e9;
-  background:#fff; line-height:1.5;
+  max-width:min(720px, 92%); margin:12px 0; padding:14px 16px;
+  background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-sm); line-height:1.55
 }
-.msg.user{margin-left:auto; background:#fdf7e6; border-color:#f2e2b3}
-.msg.assistant{margin-right:auto}
-.msg .meta{display:flex; gap:8px; align-items:center; font-size:12px; color:#7a8896; margin-bottom:6px}
-.msg .sources{margin-top:8px; padding-top:8px; border-top:1px dashed #e2e2e2; font-size:12px; color:#5C6E7E}
+.msg.user{margin-left:auto; background:#fff7df; border-color:#f0dfb1}
+.msg .meta{font-size:12px; color:#7b8798; margin-bottom:6px}
+.msg .sources{margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); font-size:12px; color:#5f6c7b}
+
+/* Composer */
+.chat-composer{display:flex; gap:10px; align-items:flex-end; padding:12px; border-top:1px solid var(--line); background:#fff}
+.input{flex:1; display:flex; gap:8px; background:#fff; border:1px solid var(--line); border-radius:12px; padding:8px 10px; box-shadow:var(--shadow-sm)}
+.input textarea{width:100%; border:0; outline:0; resize:none; max-height:180px; min-height:44px; font:inherit; background:transparent; color:inherit}
+.chip{font-size:12px; padding:6px 8px; border-radius:999px; background:#f2efe9; border:1px solid #e6ddc7}
+
+/* Toasts (замена alert) */
+.toast{
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
+  background:#0f2233; color:#fff; border:1px solid rgba(200,162,74,.35);
+  box-shadow:0 10px 30px rgba(0,0,0,.2); padding:10px 14px; border-radius:12px; opacity:0;
+  transition:opacity .25s ease, transform .25s ease; z-index:1000; pointer-events:none
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+.toast.gold{background:linear-gradient(180deg, #152636, #0f2233)}
 
 /* Typing indicator */
 .typing{
   display:inline-flex; gap:6px; align-items:center; padding:8px 10px;
-  background:#fff; border:1px solid #eee; border-radius:999px;
+  background:#fff; border:1px solid var(--line); border-radius:999px;
 }
 .dot{width:6px;height:6px;border-radius:999px;background:#c9c9c9;animation:blink 1.2s infinite ease-in-out}
 .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
-
-/* Composer */
-.chat-composer{
-  display:flex; gap:10px; align-items:flex-end; padding:12px; border-top:1px solid #eee; background:#fff;
-}
-.input{
-  flex:1; display:flex; gap:8px; background:#fff; border:1px solid #e5e5e5;
-  border-radius:12px; padding:8px 10px; box-shadow:var(--shadow-sm)
-}
-.input textarea{
-  width:100%; border:0; outline:0; resize:none; max-height:180px; min-height:42px;
-  font:inherit; color:inherit; background:transparent; padding-top:6px;
-}
-.input .chip{align-self:center}
-.chip{font-size:12px; padding:6px 8px; border-radius:999px; background:#f2efe9; border:1px solid #e0dacf}
 
 /* Forms (auth) */
 .form{display:grid; gap:12px}
 .input-text{
   width:100%; padding:10px 12px; border-radius:10px; border:1px solid #ddd; outline:0;
 }
-.input-text:focus{border-color:var(--accent-gold); box-shadow:0 0 0 3px rgba(212,175,55,.2)}
+.input-text:focus{border-color:var(--gold); box-shadow:0 0 0 3px rgba(200,162,74,.2)}
 
 /* Utilities */
 .center{display:flex; align-items:center; justify-content:center}
@@ -165,7 +149,7 @@ p{margin:.5rem 0 1rem;color:var(--text-secondary)}
 .hidden{display:none}
 
 /* Accessibility */
-:focus-visible{outline:2px solid var(--accent-gold); outline-offset:2px}
+:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
 @media (prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
 }

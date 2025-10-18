@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>НАСЛЕДИЕ — Авторизация</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/frontend/styles_unified.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/styles_unified.css?v=2">
 </head>
 <body>
   <header class="nav">
@@ -48,7 +48,15 @@
     </div>
   </main>
 
+  <div id="toast" class="toast"></div>
   <script>
+    function showToast(msg, kind='gold'){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = 'toast ' + kind;
+      requestAnimationFrame(()=>{ t.classList.add('show'); });
+      setTimeout(()=> t.classList.remove('show'), 2600);
+    }
+
     document.getElementById('authForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('username').value;
@@ -56,7 +64,7 @@
       
       // TODO: Интеграция с API авторизации
       console.log('Login attempt:', { username, password });
-      alert('Функция авторизации будет интегрирована с бэкендом');
+      showToast('Функция авторизации будет интегрирована с бэкендом');
     });
   </script>
 </body>
